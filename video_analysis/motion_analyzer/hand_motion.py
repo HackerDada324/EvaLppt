@@ -3,21 +3,50 @@ import math
 import numpy as np
 import time
 from typing import Dict, List, Optional, Tuple, Union
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from datetime import datetime
 import mediapipe as mp
-from ..core.base import MotionAnalyzer
-from ..core.data_models import AnalysisResult, VideoAnalysisStats
 
+@dataclass
+class AnalysisResult:
+    """Data class to store results of a single frame analysis"""
+    status: str
+    angle: float
+    direction: str
+    landmarks: Dict = field(default_factory=dict)
+    frame_number: Optional[int] = None
+    timestamp: Optional[float] = None
+    additional_info: Dict = field(default_factory=dict)
 
-class HandMotionAnalyzer(MotionAnalyzer):
+@dataclass
+class VideoAnalysisStats:
+    """Data class to store statistical results of video analysis"""
+    mean_angle: float
+    median_angle: float
+    std_dev_angle: float
+    min_angle: float
+    max_angle: float
+    dominant_direction: str
+    direction_percentages: Dict[str, float]
+    stability_score: float
+    frames_analyzed: int
+    frames_with_detection: int
+    detection_rate: float
+    duration_seconds: float
+    movement_score: float = 0.0
+    excessive_motion_rate: float = 0.0
+    avg_hands_per_frame: float = 0.0
+    processing_time: float = 0.0
+    processing_fps: float = 0.0
+
+class HandMotionAnalyzer:
     """Analyzer for hand movement during presentations, detecting excessive motion"""
     
     def __init__(self, min_detection_confidence: float = 0.7, motion_threshold: float = 30):
-        super().__init__(min_detection_confidence)
-        self.motion_threshold = motion_threshold  # Threshold for determining excessive movement
+        self.min_detection_confidence = min_detection_confidence
+        self.motion_threshold = motion_threshold 
         self.mp_hands = mp.solutions.hands
-        self.prev_hand_positions = None  # Store previous hand positions for motion tracking
+        self.prev_hand_positions = None  
     
     def _analyze_frame(self, image_rgb: np.ndarray) -> Optional[AnalysisResult]:
         """Analyze a single frame for hand movement statistics"""
@@ -126,13 +155,13 @@ class HandMotionAnalyzer(MotionAnalyzer):
             
             return result
     
-    def process_video(self, video_path: str, sampling_rate: int = 1, show_progress: bool = True) -> VideoAnalysisStats:
+    def process_video(self, video_path: str, target_fps: Optional[float] = None, show_progress: bool = True) -> VideoAnalysisStats:
         """
         Process video and analyze hand movements frame by frame
         
         Args:
             video_path: Path to the video file
-            sampling_rate: Process every Nth frame (1 = every frame, 2 = every other frame, etc.)
+            target_fps: Target frames per second for analysis; if None, uses original video FPS
             show_progress: Whether to display a progress bar during processing
             
         Returns:
@@ -144,9 +173,20 @@ class HandMotionAnalyzer(MotionAnalyzer):
             raise ValueError(f"Error: Could not open video at {video_path}")
         
         # Get video properties
-        fps = cap.get(cv2.CAP_PROP_FPS)
+        original_fps = cap.get(cv2.CAP_PROP_FPS)
         frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        duration = frame_count / fps if fps > 0 else 0
+        duration = frame_count / original_fps if original_fps > 0 else 0
+        
+        # Determine processing FPS and calculate frame skipping
+        processing_fps = original_fps if target_fps is None else target_fps
+        
+        # Calculate frames to skip
+        if processing_fps >= original_fps:
+            # If target FPS is higher or equal to original, process every frame
+            frame_interval = 1
+        else:
+            # Skip frames to match desired FPS
+            frame_interval = int(original_fps / processing_fps)
         
         # Variables to store analysis results
         motion_distances = []
@@ -179,8 +219,8 @@ class HandMotionAnalyzer(MotionAnalyzer):
             if not ret:
                 break
                 
-            # Process every Nth frame based on sampling rate
-            if frame_index % sampling_rate == 0:
+            # Process frames based on calculated interval
+            if frame_index % frame_interval == 0:
                 # Process the frame
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 result = self._analyze_frame(frame_rgb)
@@ -202,12 +242,16 @@ class HandMotionAnalyzer(MotionAnalyzer):
                     hand_count = len(unique_hands)
                     hand_count_per_frame.append(hand_count)
                     
-                    timestamps.append(frame_index / fps)
+                    timestamps.append(frame_index / original_fps)
+                    
+                    # Set frame metadata
+                    result.frame_number = frame_index
+                    result.timestamp = frame_index / original_fps
                     
                     # Store frame results
                     frame_results.append({
                         "frame": frame_index,
-                        "timestamp": frame_index / fps,
+                        "timestamp": frame_index / original_fps,
                         "motion_distance": motion_distance,
                         "excessive_motion": (result.direction == "excessive"),
                         "hands_detected": hand_count,
@@ -226,7 +270,7 @@ class HandMotionAnalyzer(MotionAnalyzer):
             
         # Calculate processing time
         processing_time = time.time() - start_time
-        processing_fps = frame_count / processing_time
+        effective_fps = frame_count / processing_time
         
         # Release resources
         cap.release()
@@ -246,7 +290,8 @@ class HandMotionAnalyzer(MotionAnalyzer):
             avg_hands_per_frame = np.mean(hand_count_per_frame) if hand_count_per_frame else 0
             
             # Calculate detection rate
-            detection_rate = frames_with_detection / (frame_count / sampling_rate) * 100
+            frames_expected = frame_count // frame_interval
+            detection_rate = frames_with_detection / frames_expected * 100
             
             # Calculate a hand movement score (0-100, higher means more movement)
             movement_score = min(100, (mean_motion / self.motion_threshold) * 50)
@@ -264,22 +309,24 @@ class HandMotionAnalyzer(MotionAnalyzer):
                 frames_with_detection=frames_with_detection,
                 detection_rate=detection_rate,
                 duration_seconds=duration,
-                movement_score=movement_score,  # Make sure this is included
-                excessive_motion_rate=excessive_motion_rate,  # Make sure this is included
+                movement_score=movement_score,
+                excessive_motion_rate=excessive_motion_rate,
                 avg_hands_per_frame=avg_hands_per_frame,
                 processing_time=processing_time,
-                processing_fps=processing_fps
+                processing_fps=effective_fps
             )
             
             # Print summary
             print(f"\nHand Movement Analysis Complete for {video_path}")
             print(f"- Duration: {duration:.2f} seconds")
-            print(f"- Frames processed: {frames_with_detection}/{frame_index} ({detection_rate:.2f}%)")
+            print(f"- Original video FPS: {original_fps:.2f}")
+            print(f"- Target processing FPS: {processing_fps:.2f}")
+            print(f"- Frames processed: {frames_with_detection}/{frames_expected} ({detection_rate:.2f}%)")
             print(f"- Average hand movement: {mean_motion:.2f} pixels per frame")
             print(f"- Excessive movement detected in {excessive_motion_frames} frames ({excessive_motion_rate:.2f}%)")
             print(f"- Movement score: {movement_score:.2f}/100")
             print(f"- Average hands detected per frame: {avg_hands_per_frame:.2f}")
-            print(f"- Processing time: {processing_time:.2f} seconds ({processing_fps:.2f} FPS)")
+            print(f"- Processing time: {processing_time:.2f} seconds ({effective_fps:.2f} FPS)")
             
             return stats
         else:

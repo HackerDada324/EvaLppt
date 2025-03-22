@@ -3,18 +3,42 @@ import math
 import numpy as np
 import time
 from typing import Dict, List, Optional, Tuple, Union
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from datetime import datetime
 import mediapipe as mp
-from ..core.base import MotionAnalyzer
-from ..core.data_models import AnalysisResult, VideoAnalysisStats
 
 
-class BodyMotionAnalyzer(MotionAnalyzer):
+@dataclass
+class AnalysisResult:
+    """Data class to store results of a single frame analysis"""
+    status: str
+    angle: float
+    direction: str
+    landmarks: Dict
+    frame_number: int = None
+    timestamp: float = None
+
+@dataclass
+class VideoAnalysisStats:
+    """Data class to store statistical results of video analysis"""
+    mean_angle: float
+    median_angle: float
+    std_dev_angle: float
+    min_angle: float
+    max_angle: float
+    dominant_direction: str
+    direction_percentages: Dict[str, float]
+    stability_score: float
+    frames_analyzed: int
+    frames_with_detection: int
+    detection_rate: float
+    duration_seconds: float
+
+class BodyMotionAnalyzer:
     """Analyzer for body alignment and tilt relative to vertical axis, with minimal processing"""
     
     def __init__(self, min_detection_confidence: float = 0.7, tilt_threshold: float = 5):
-        super().__init__(min_detection_confidence)
+        self.min_detection_confidence = min_detection_confidence
         self.tilt_threshold = tilt_threshold
         self.mp_pose = mp.solutions.pose
     
@@ -109,13 +133,13 @@ class BodyMotionAnalyzer(MotionAnalyzer):
             
             return result
     
-    def process_video(self, video_path: str, sampling_rate: int = 1, show_progress: bool = True) -> VideoAnalysisStats:
+    def process_video(self, video_path: str, target_fps: float = None, show_progress: bool = True) -> VideoAnalysisStats:
         """
         Process video and analyze body alignment frame by frame, only collecting statistics
         
         Args:
             video_path: Path to the video file
-            sampling_rate: Process every Nth frame (1 = every frame, 2 = every other frame, etc.)
+            target_fps: Target frames per second to analyze (None = use video's native FPS)
             show_progress: Whether to display a progress bar during processing
             
         Returns:
@@ -127,9 +151,22 @@ class BodyMotionAnalyzer(MotionAnalyzer):
             raise ValueError(f"Error: Could not open video at {video_path}")
         
         # Get video properties
-        fps = cap.get(cv2.CAP_PROP_FPS)
+        video_fps = cap.get(cv2.CAP_PROP_FPS)
         frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        duration = frame_count / fps if fps > 0 else 0
+        duration = frame_count / video_fps if video_fps > 0 else 0
+        
+        # Calculate sampling rate based on target_fps
+        if target_fps is None:
+            # Use all frames (sampling rate of 1)
+            sampling_rate = 1
+            effective_fps = video_fps
+        else:
+            # Ensure target_fps doesn't exceed video's actual FPS
+            effective_fps = min(target_fps, video_fps)
+            
+            # Calculate the sampling rate (how many frames to skip)
+            # If video is 30fps and we want 5fps, we process every 6th frame
+            sampling_rate = max(1, int(round(video_fps / effective_fps)))
         
         # Variables to store analysis results
         angles = []
@@ -158,7 +195,7 @@ class BodyMotionAnalyzer(MotionAnalyzer):
             if not ret:
                 break
                 
-            # Process every Nth frame based on sampling rate
+            # Process every Nth frame based on calculated sampling rate
             if frame_index % sampling_rate == 0:
                 # Process the frame
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -168,15 +205,15 @@ class BodyMotionAnalyzer(MotionAnalyzer):
                     frames_with_detection += 1
                     angles.append(result.angle)
                     directions.append(result.direction)
-                    timestamps.append(frame_index / fps)
+                    timestamps.append(frame_index / video_fps)
                     
                     # Set frame metadata
                     result.frame_number = frame_index
-                    result.timestamp = frame_index / fps
+                    result.timestamp = frame_index / video_fps
                     
                     frame_results.append({
                         "frame": frame_index,
-                        "timestamp": frame_index / fps,
+                        "timestamp": frame_index / video_fps,
                         "angle": result.angle,
                         "direction": result.direction,
                         "status": result.status
@@ -242,6 +279,7 @@ class BodyMotionAnalyzer(MotionAnalyzer):
             # Print summary
             print(f"\nBody Alignment Analysis Complete for {video_path}")
             print(f"- Duration: {duration:.2f} seconds")
+            print(f"- Video FPS: {video_fps:.2f}, Target FPS: {effective_fps:.2f} (sampling rate: 1/{sampling_rate})")
             print(f"- Frames processed: {frames_with_detection}/{frame_index} ({detection_rate:.2f}%)")
             print(f"- Average tilt angle: {mean_angle:.2f}° ± {std_dev_angle:.2f}°")
             print(f"- Dominant tilt direction: {dominant_direction}")

@@ -2,18 +2,43 @@ import cv2
 import math
 import numpy as np
 import time
+from dataclasses import dataclass, asdict, field
 from typing import Dict, List, Optional, Tuple, Union
 import mediapipe as mp
-from ..core.base import MotionAnalyzer
-from ..core.data_models import AnalysisResult, VideoAnalysisStats
 
+@dataclass
+class AnalysisResult:
+    """Data class to store results of a single frame analysis"""
+    status: str
+    angle: float
+    direction: str
+    landmarks: Dict = field(default_factory=dict)
+    frame_number: Optional[int] = None
+    timestamp: Optional[float] = None
+    additional_info: Dict = field(default_factory=dict)
 
-class GazeMotionAnalyzer(MotionAnalyzer):
+@dataclass
+class VideoAnalysisStats:
+    """Data class to store statistical results of video analysis"""
+    dominant_direction: str
+    direction_percentages: Dict[str, float]
+    frames_analyzed: int
+    frames_with_detection: int
+    detection_rate: float
+    duration_seconds: float
+    additional_stats: Dict = field(default_factory=dict)
+    mean_angle: float = 0.0
+    median_angle: float = 0.0
+    std_dev_angle: float = 0.0
+    min_angle: float = 0.0
+    max_angle: float = 0.0
+    stability_score: float = 0.0
+
+class GazeMotionAnalyzer:
     """Analyzer for eye gaze using GazeTracking library"""
     
     def __init__(self, min_detection_confidence: float = 0.5):
-        super().__init__(min_detection_confidence)
-        # GazeTracking will be imported during processing to avoid dependency issues
+        self.min_detection_confidence = min_detection_confidence
     
     def _analyze_frame(self, image_rgb: np.ndarray) -> Optional[AnalysisResult]:
         """Analyze a single frame for gaze statistics only"""
@@ -90,13 +115,13 @@ class GazeMotionAnalyzer(MotionAnalyzer):
         
         return result
     
-    def process_video(self, video_path: str, sampling_rate: int = 1, show_progress: bool = True) -> VideoAnalysisStats:
+    def process_video(self, video_path: str, target_fps: Optional[float] = None, show_progress: bool = True) -> VideoAnalysisStats:
         """
         Process video and analyze gaze frame by frame, only collecting statistics
         
         Args:
             video_path: Path to the video file
-            sampling_rate: Process every Nth frame (1 = every frame, 2 = every other frame, etc.)
+            target_fps: Target frames per second for analysis; if None, uses original video FPS
             show_progress: Whether to display a progress bar during processing
             
         Returns:
@@ -108,9 +133,20 @@ class GazeMotionAnalyzer(MotionAnalyzer):
             raise ValueError(f"Error: Could not open video at {video_path}")
         
         # Get video properties
-        fps = cap.get(cv2.CAP_PROP_FPS)
+        original_fps = cap.get(cv2.CAP_PROP_FPS)
         frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        duration = frame_count / fps if fps > 0 else 0
+        duration = frame_count / original_fps if original_fps > 0 else 0
+        
+        # Determine processing FPS and calculate frame skipping
+        processing_fps = original_fps if target_fps is None else target_fps
+        
+        # Calculate frames to skip
+        if processing_fps >= original_fps:
+            # If target FPS is higher or equal to original, process every frame
+            frame_interval = 1
+        else:
+            # Skip frames to match desired FPS
+            frame_interval = int(original_fps / processing_fps)
         
         # Variables to store analysis results
         directions = []
@@ -139,8 +175,8 @@ class GazeMotionAnalyzer(MotionAnalyzer):
             if not ret:
                 break
                 
-            # Process every Nth frame based on sampling rate
-            if frame_index % sampling_rate == 0:
+            # Process frames based on calculated interval
+            if frame_index % frame_interval == 0:
                 # Process the frame
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 result = self._analyze_frame(frame_rgb)
@@ -148,16 +184,16 @@ class GazeMotionAnalyzer(MotionAnalyzer):
                 if result is not None:
                     frames_with_detection += 1
                     directions.append(result.direction)
-                    timestamps.append(frame_index / fps)
+                    timestamps.append(frame_index / original_fps)
                     eye_contact_counts[result.status] += 1
                     
                     # Set frame metadata
                     result.frame_number = frame_index
-                    result.timestamp = frame_index / fps
+                    result.timestamp = frame_index / original_fps
                     
                     frame_results.append({
                         "frame": frame_index,
-                        "timestamp": frame_index / fps,
+                        "timestamp": frame_index / original_fps,
                         "direction": result.direction,
                         "status": result.status
                     })
@@ -174,7 +210,7 @@ class GazeMotionAnalyzer(MotionAnalyzer):
             
         # Calculate processing time
         processing_time = time.time() - start_time
-        processing_fps = frame_count / processing_time
+        effective_fps = frame_count / processing_time
         
         # Release resources
         cap.release()
@@ -196,7 +232,8 @@ class GazeMotionAnalyzer(MotionAnalyzer):
                                       total_frames_with_detection * 100) if total_frames_with_detection > 0 else 0
             
             # Calculate detection rate
-            detection_rate = frames_with_detection / (frame_count / sampling_rate) * 100
+            frames_expected = frame_count // frame_interval
+            detection_rate = frames_with_detection / frames_expected * 100
             
             # Create statistics object
             stats = VideoAnalysisStats(
@@ -209,18 +246,23 @@ class GazeMotionAnalyzer(MotionAnalyzer):
                 additional_stats={
                     "eye_contact_percentage": eye_contact_percentage,
                     "eye_contact_frames": eye_contact_counts["Maintaining eye contact"],
-                    "no_eye_contact_frames": eye_contact_counts["Not maintaining eye contact"]
+                    "no_eye_contact_frames": eye_contact_counts["Not maintaining eye contact"],
+                    "original_fps": original_fps,
+                    "target_fps": processing_fps,
+                    "frame_interval": frame_interval
                 }
             )
             
             # Print summary
             print(f"\nGaze Analysis Complete for {video_path}")
             print(f"- Duration: {duration:.2f} seconds")
-            print(f"- Frames processed: {frames_with_detection}/{frame_index} ({detection_rate:.2f}%)")
+            print(f"- Original video FPS: {original_fps:.2f}")
+            print(f"- Target processing FPS: {processing_fps:.2f}")
+            print(f"- Frames processed: {frames_with_detection}/{frames_expected} ({detection_rate:.2f}%)")
             print(f"- Dominant gaze direction: {dominant_direction}")
             print(f"- Eye contact maintained: {eye_contact_percentage:.2f}% of detected frames")
             print(f"- Direction breakdown: {direction_percentages}")
-            print(f"- Processing time: {processing_time:.2f} seconds ({processing_fps:.2f} FPS)")
+            print(f"- Processing time: {processing_time:.2f} seconds ({effective_fps:.2f} FPS)")
             
             return stats
         else:
