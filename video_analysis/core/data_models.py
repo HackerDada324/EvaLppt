@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Optional
 
 @dataclass
 class AnalysisResult:
@@ -28,3 +28,8 @@ class VideoAnalysisStats:
     detection_rate: float = 0.0
     duration_seconds: float = 0.0
     additional_stats: Dict = None
+    movement_score: float = 0.0  
+    avg_hands_per_frame: float = 0.0  
+    processing_time: float = 0.0  
+    processing_fps: float = 0.0  
+    excessive_motion_rate: float = 0.0
