@@ -11,6 +11,10 @@ class AnalysisResult:
     frame_number: int = 0
     timestamp: float = 0.0
     additional_info: Dict = None
+    emotion: str = ""
+    confidence: float = 0.0
+    sentiment: str = ""
+    emotion_probabilities: Dict[str, float] = None  # Add this line
 
 @dataclass
 class VideoAnalysisStats:
@@ -33,3 +37,11 @@ class VideoAnalysisStats:
     processing_time: float = 0.0  
     processing_fps: float = 0.0  
     excessive_motion_rate: float = 0.0
+    emotion: str = ""
+    confidence: float = 0.0
+    sentiment: str = ""
+    dominant_emotion: str = ""
+    emotion_percentages: Dict[str, float] = None
+    mean_confidence: float = 0.0
+    overall_sentiment: float = 0.0
+    sentiment_score: float = 0.0

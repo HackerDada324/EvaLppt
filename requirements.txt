@@ -4,3 +4,5 @@ opencv-python==4.10.0
 numpy==1.26.4
 deepface==0.0.93
 ultralyticsplus==0.0.28
+transformers==4.50.0
+tqdm==4.67.1
