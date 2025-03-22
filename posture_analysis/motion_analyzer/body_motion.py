@@ -6,8 +6,9 @@ from typing import Dict, List, Optional, Tuple, Union
 from dataclasses import dataclass, asdict
 from datetime import datetime
 import mediapipe as mp
-from posture_analysis.core.base import MotionAnalyzer
-from posture_analysis.core.data_models import AnalysisResult, VideoAnalysisStats
+from ..core.base import MotionAnalyzer
+from ..core.data_models import AnalysisResult, VideoAnalysisStats
+
 
 class BodyMotionAnalyzer(MotionAnalyzer):
     """Analyzer for body alignment and tilt relative to vertical axis, with minimal processing"""

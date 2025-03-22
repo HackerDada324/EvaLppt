@@ -4,7 +4,7 @@ import time
 from typing import Tuple, Optional, Dict, Any, List, Union
 from dataclasses import dataclass, asdict
 from datetime import datetime
-from posture_analysis.core.data_models import AnalysisResult, VideoAnalysisStats
+from .data_models import AnalysisResult, VideoAnalysisStats
 
 class MotionAnalyzer:
     """Base class for all motion analyzers"""

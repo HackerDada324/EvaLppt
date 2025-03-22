@@ -4,8 +4,8 @@ import numpy as np
 import time
 from typing import Dict, List, Optional, Tuple, Union
 import mediapipe as mp
-from posture_analysis.core.base import MotionAnalyzer
-from posture_analysis.core.data_models import AnalysisResult, VideoAnalysisStats
+from ..core.base import MotionAnalyzer
+from ..core.data_models import AnalysisResult, VideoAnalysisStats
 
 
 class GazeMotionAnalyzer(MotionAnalyzer):
