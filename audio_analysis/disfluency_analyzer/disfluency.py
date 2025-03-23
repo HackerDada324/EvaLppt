@@ -73,8 +73,16 @@ class DisfluencyTagger:
           "tags": ["O", "O", "O", "B-FILLER", "O", "O", "O", "O", "O", "O", "B-FILLER", "O", "O", "O", "O", "B-REP", "I-REP", "O", "O", "O"],
           "explanation": "Tagged 'um' and 'uh' as fillers, and the repeated word 'the' as a repetition disfluency."
         }}
-        
+
+        Text: "I was going to the store, but then"
+        Expected JSON:
+        {{
+            "tokens": ["I", "was", "going", "to", "the", "store", ",", "but", "then", "—"],
+            "tags": ["O", "O", "O", "O", "O", "O", "O", "O", "O", "B-INCOMPLETE"],
+            "explanation": "The sentence is left unfinished, making 'then—' an incomplete thought."
+        }}
         Example with informal language:
+
         Text: "Yo dude, that movie was totally lit, ngl, but the ending was kinda meh."
         Expected JSON:
         {{
