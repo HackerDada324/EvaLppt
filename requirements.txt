@@ -6,3 +6,5 @@ deepface==0.0.93
 ultralyticsplus==0.0.28
 transformers==4.50.0
 tqdm==4.67.1
+protobuf==4.25.6
+nltk==3.9.1
