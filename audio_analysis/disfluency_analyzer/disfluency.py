@@ -39,7 +39,8 @@ class DisfluencyTagger:
             "SWAP",        # word swaps/mid-sentence changes
             "GRAM",        # grammatical errors
             "STUTTER",     # stuttering
-            "INCOMPLETE"   # incomplete sentences
+            "INCOMPLETE",  # incomplete sentences
+            "INFORMAL"     # informal language/slang
         ]
     
     def create_prompt(self, text: str) -> str:
@@ -62,6 +63,7 @@ class DisfluencyTagger:
         - GRAM: Unintended grammatical errors
         - STUTTER: Stuttering where syllables or sounds are involuntarily repeated
         - INCOMPLETE: Incomplete sentences
+        - INFORMAL: Informal language, slang, or colloquial expressions
         
         Example:
         Text: "I was, um, thinking that we could, uh, maybe go to the the store later."
@@ -70,6 +72,15 @@ class DisfluencyTagger:
           "tokens": ["I", "was", ",", "um", ",", "thinking", "that", "we", "could", ",", "uh", ",", "maybe", "go", "to", "the", "the", "store", "later", "."],
           "tags": ["O", "O", "O", "B-FILLER", "O", "O", "O", "O", "O", "O", "B-FILLER", "O", "O", "O", "O", "B-REP", "I-REP", "O", "O", "O"],
           "explanation": "Tagged 'um' and 'uh' as fillers, and the repeated word 'the' as a repetition disfluency."
+        }}
+        
+        Example with informal language:
+        Text: "Yo dude, that movie was totally lit, ngl, but the ending was kinda meh."
+        Expected JSON:
+        {{
+          "tokens": ["Yo", "dude", ",", "that", "movie", "was", "totally", "lit", ",", "ngl", ",", "but", "the", "ending", "was", "kinda", "meh", "."],
+          "tags": ["B-INFORMAL", "B-INFORMAL", "O", "O", "O", "O", "B-INFORMAL", "B-INFORMAL", "O", "B-INFORMAL", "O", "O", "O", "O", "O", "B-INFORMAL", "B-INFORMAL", "O"],
+          "explanation": "Tagged 'Yo', 'dude', 'totally', 'lit', 'ngl', 'kinda', and 'meh' as informal language or slang expressions."
         }}
         
         Return your analysis as a JSON object with these fields:
