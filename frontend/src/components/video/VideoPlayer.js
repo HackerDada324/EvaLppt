@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import '../../styles/VideoPlayer.css';
+import { Play, Pause, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
+import '../../styles/videoPlayer.css';
 
 const VideoPlayer = ({ 
   src, 
@@ -170,7 +171,7 @@ const VideoPlayer = ({
           
           <div className="controls-row">
             <button className="control-button" onClick={togglePlay} aria-label={isPlaying ? 'Pause' : 'Play'}>
-              {isPlaying ? '⏸️' : '▶️'}
+              {isPlaying ? <Pause size={20} /> : <Play size={20} />}
             </button>
             
             <div className="time-display">
@@ -180,7 +181,9 @@ const VideoPlayer = ({
             </div>
             
             <div className="volume-control">
-              <span className="volume-icon">{volume === 0 ? '🔇' : volume < 0.5 ? '🔉' : '🔊'}</span>
+              <button className="volume-icon" onClick={() => setVolume(volume === 0 ? 0.5 : 0)}>
+                {volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
+              </button>
               <input 
                 type="range" 
                 min="0" 
@@ -194,7 +197,7 @@ const VideoPlayer = ({
             
             {allowFullScreen && (
               <button className="control-button fullscreen-button" onClick={toggleFullScreen} aria-label="Toggle fullscreen">
-                {isFullScreen ? '⤓' : '⤢'}
+                {isFullScreen ? <Minimize size={18} /> : <Maximize size={18} />}
               </button>
             )}
           </div>
@@ -203,8 +206,13 @@ const VideoPlayer = ({
       
       {/* Play/Pause overlay indicator */}
       <div className={`play-overlay ${isPlaying ? 'fade-out' : 'fade-in'}`}>
-        <div className="play-icon">{isPlaying ? '⏸️' : '▶️'}</div>
+        <div className="play-icon">
+          {isPlaying ? <Pause size={36} /> : <Play size={36} />}
+        </div>
       </div>
+      
+      <div className="video-shape-1"></div>
+      <div className="video-shape-2"></div>
     </div>
   );
 };

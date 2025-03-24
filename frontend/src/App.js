@@ -10,30 +10,10 @@ import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import Sidebar from './components/common/Sidebar';
 
-// Original components (for backward compatibility)
-import SummaryDashboard from './components/analysis/SummaryDashboard';
-import VideoUploader from './components/video/VideoUploader';
-import MotionAnalysisResults from './components/analysis/MotionAnalysisResults';
-
-// New page components - create placeholders if not implemented yet
-const HomePage = () => <SummaryDashboard />; // Use your existing dashboard as homepage for now
-const UploadPage = () => <VideoUploader />; // Use your existing uploader
-const AnalysisPage = () => <MotionAnalysisResults />; // Use your existing results page
-
-// Placeholder pages - replace these with actual implementations when ready
-const HistoryPage = () => (
-  <div className="container">
-    <h1>Analysis History</h1>
-    <p>Your previous analysis sessions will appear here.</p>
-  </div>
-);
-
-const ProfilePage = () => (
-  <div className="container">
-    <h1>User Profile</h1>
-    <p>User profile settings will appear here.</p>
-  </div>
-);
+// Page components
+import HomePage from './pages/HomePage';
+import UploadPage from './pages/UploadPage';
+import AnalysisPage from './pages/AnalysisPage';
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -50,14 +30,11 @@ function App() {
         
         <main className={`main-content ${sidebarOpen ? 'with-sidebar' : ''}`}>
           <Routes>
-            {/* New routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/upload" element={<UploadPage />} />
-            <Route path="/analysis/*" element={<AnalysisPage />} />
-            <Route path="/history" element={<HistoryPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            
-            {/* Legacy routes with redirects to maintain compatibility */}
+            <Route path="/analysis" element={<AnalysisPage />} />
+            <Route path="/analysis/:id" element={<AnalysisPage />} />   
+            {/* Legacy routes with redirects */}
             <Route path="/summary" element={<Navigate to="/" replace />} />
             <Route path="/analysis-results" element={<Navigate to="/analysis" replace />} />
           </Routes>

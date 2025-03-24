@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import '../../styles/VideoProcessingStatus.css';
+import { CheckCircle, Loader } from 'lucide-react';
+import '../../styles/videoProcessingStatus.css';
 
 const VideoProcessingStatus = ({ 
   message = "Processing your video...", 
@@ -54,41 +55,48 @@ const VideoProcessingStatus = ({
   
   return (
     <div className="video-processing-status">
-      <div className="processing-animation">
-        <div className="spinner"></div>
-      </div>
-      
-      <div className="processing-message">
-        <h3>{message}</h3>
-        <p>{subMessage}</p>
-      </div>
-      
-      <div className="processing-steps">
-        {processingSteps.map((step, index) => (
-          <div 
-            key={index} 
-            className={`processing-step ${getStepStatus(index)}`}
-          >
-            <div className="step-indicator">
-              {getStepStatus(index) === 'completed' ? '✓' : 
-               getStepStatus(index) === 'current' ? <span className="pulsing-dot"></span> : ''}
-            </div>
-            <div className="step-label">
-              {step}
-              {getStepStatus(index) === 'current' && <span className="loading-dots">{dots}</span>}
-            </div>
+      <div className="processing-content">
+        <div className="processing-animation">
+          <div className="spinner">
+            <Loader size={32} className="spinner-icon" />
           </div>
-        ))}
-      </div>
-      
-      {showProgress && (
-        <div className="progress-container">
-          <div className="progress-bar">
-            <div className="progress-fill" style={{ width: `${progress}%` }}></div>
-          </div>
-          <div className="progress-percentage">{Math.round(progress)}%</div>
         </div>
-      )}
+        
+        <div className="processing-message">
+          <h3>{message}</h3>
+          <p>{subMessage}</p>
+        </div>
+        
+        <div className="processing-steps">
+          {processingSteps.map((step, index) => (
+            <div 
+              key={index} 
+              className={`processing-step ${getStepStatus(index)}`}
+            >
+              <div className="step-indicator">
+                {getStepStatus(index) === 'completed' ? <CheckCircle size={16} /> : 
+                 getStepStatus(index) === 'current' ? <span className="pulsing-dot"></span> : ''}
+              </div>
+              <div className="step-label">
+                {step}
+                {getStepStatus(index) === 'current' && <span className="loading-dots">{dots}</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {showProgress && (
+          <div className="progress-container">
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+            </div>
+            <div className="progress-percentage">{Math.round(progress)}%</div>
+          </div>
+        )}
+      </div>
+      
+      <div className="processing-shape-1"></div>
+      <div className="processing-shape-2"></div>
     </div>
   );
 };

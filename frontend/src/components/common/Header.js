@@ -1,55 +1,76 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import '../../styles/Header.css'; // You'll need to create this CSS file
+"use client"
+
+import { useState, useEffect } from "react"
+import { Link, useLocation } from "react-router-dom"
+import "../../styles/Header.css"
 
 const Header = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const location = useLocation();
-  
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const location = useLocation()
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
+    setMenuOpen(!menuOpen)
+  }
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const closeMenu = () => {
+      if (menuOpen) setMenuOpen(false)
+    }
+
+    document.body.addEventListener("click", closeMenu)
+    return () => document.body.removeEventListener("click", closeMenu)
+  }, [menuOpen])
 
   return (
-    <header className="app-header">
+    <header className={`app-header ${scrolled ? "scrolled" : ""}`}>
       <div className="header-container">
         <div className="logo-container">
           <Link to="/" className="logo">
-            <img src="/assets/logo.png" alt="Presentation Evaluator" />
-            <span>Presentation Evaluator</span>
+            <span>DataAnalyzer</span>
           </Link>
         </div>
 
-        <nav className={`main-nav ${menuOpen ? 'open' : ''}`}>
+        <nav className={`main-nav ${menuOpen ? "open" : ""}`} onClick={(e) => e.stopPropagation()}>
           <ul>
-            <li className={location.pathname === '/' ? 'active' : ''}>
+            <li className={location.pathname === "/" ? "active" : ""}>
               <Link to="/">Home</Link>
             </li>
-            <li className={location.pathname === '/upload' ? 'active' : ''}>
+            <li className={location.pathname === "/upload" ? "active" : ""}>
               <Link to="/upload">New Analysis</Link>
-            </li>
-            <li className={location.pathname === '/history' ? 'active' : ''}>
-              <Link to="/history">History</Link>
-            </li>
-            <li className={location.pathname === '/profile' ? 'active' : ''}>
-              <Link to="/profile">Profile</Link>
             </li>
           </ul>
         </nav>
 
         <div className="header-actions">
-          {/* If you have authentication, you can add user menu here */}
           <button className="primary-button">
-            <Link to="/upload">Analyze Presentation</Link>
+            <Link to="/upload">Start Analysis</Link>
           </button>
-          
-          <button className="mobile-menu-toggle" onClick={toggleMenu} aria-label="Toggle menu">
+          <button
+            className={`mobile-menu-toggle ${menuOpen ? "open" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleMenu()
+            }}
+            aria-label="Toggle menu"
+          >
             <span className="hamburger-icon"></span>
           </button>
         </div>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

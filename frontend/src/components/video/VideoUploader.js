@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { analysisService } from '../../services/analysisService';
+import { Upload, X, AlertCircle, CheckCircle, Info } from 'lucide-react';
 import VideoPlayer from './VideoPlayer';
 import VideoProcessingStatus from './VideoProcessingStatus';
-import Loading from '../common/Loading';
-import '../../styles/VideoUploader.css';
+import '../../styles/videoUploader.css';
 
 const VideoUploader = () => {
   // State hooks
@@ -140,13 +140,7 @@ const VideoUploader = () => {
             const analysisResults = await analysisService.getAnalysisResults(analysisId);
             
             // Navigate to results page with the data
-            navigate('/analysis', { 
-              state: { 
-                analysisResults: analysisResults.data,
-                videoName: file.name,
-                videoUrl: preview
-              } 
-            });
+            navigate(`/analysis/${analysisId}`);
           } else if (statusResponse.data.status === 'failed') {
             clearInterval(pollingInterval);
             setError('Analysis failed. Please try again with a different video.');
@@ -185,7 +179,10 @@ const VideoUploader = () => {
 
   return (
     <div className="video-uploader-container">
-      <h2>Upload Presentation Video</h2>
+      <div className="section-header">
+        <h2>Upload Presentation Video</h2>
+        <p>Upload your video to receive AI-powered feedback on your presentation skills</p>
+      </div>
       
       {/* Main upload area */}
       <div 
@@ -217,7 +214,8 @@ const VideoUploader = () => {
               <p className="video-name">{file.name}</p>
               <p className="video-size">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
               {!uploading && !processing && (
-                <button className="reset-button" onClick={(e) => { e.stopPropagation(); resetUpload(); }}>
+                <button className="secondary-button" onClick={(e) => { e.stopPropagation(); resetUpload(); }}>
+                  <X size={16} />
                   Choose Different Video
                 </button>
               )}
@@ -225,16 +223,26 @@ const VideoUploader = () => {
           </div>
         ) : (
           <div className="upload-prompt">
-            <div className="upload-icon">📤</div>
+            <div className="upload-icon">
+              <Upload size={40} />
+            </div>
             <p>Drag and drop your video here or click to browse</p>
             <p className="upload-hint">Supported formats: MP4, MOV, AVI, etc.</p>
             <p className="upload-hint">Maximum size: 100MB</p>
           </div>
         )}
+        
+        <div className="upload-shape-1"></div>
+        <div className="upload-shape-2"></div>
       </div>
       
       {/* Error message display */}
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="error-message">
+          <AlertCircle size={18} />
+          <span>{error}</span>
+        </div>
+      )}
       
       {/* Upload/Processing status display */}
       {uploading && (
@@ -259,7 +267,7 @@ const VideoUploader = () => {
       {/* Action button */}
       {!uploading && !processing && (
         <button 
-          className="upload-button" 
+          className="primary-button" 
           onClick={handleUpload}
           disabled={!file || uploading || processing}
         >
@@ -269,7 +277,10 @@ const VideoUploader = () => {
       
       {/* Instructions */}
       <div className="upload-instructions">
-        <h3>Guidelines for Best Results:</h3>
+        <div className="instructions-header">
+          <Info size={20} />
+          <h3>Guidelines for Best Results:</h3>
+        </div>
         <ul>
           <li>Ensure good lighting and clear audio</li>
           <li>Position the camera to capture your full upper body</li>

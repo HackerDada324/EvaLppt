@@ -1,138 +1,351 @@
-/* UploadPage.css - Styling for the video upload page */
+/* UploadPage.css - Redesigned to match HomePage.css and AnalysisPage.css style */
+:root {
+  --primary-color: #3498db;
+  --primary-light: rgba(52, 152, 219, 0.1);
+  --primary-dark: #2980b9;
+  --text-primary: #2c3e50;
+  --text-secondary: #566573;
+  --text-light: #7f8c8d;
+  --bg-light: #f8f9fa;
+  --bg-white: #ffffff;
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --success-color: #2ecc71;
+  --error-color: #e74c3c;
+  --warning-color: #f39c12;
+}
 
 .upload-page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Section header styling to match HomePage and AnalysisPage */
+.upload-page .section-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+}
+
+.upload-page .section-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.upload-page .section-header h1::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 3px;
+}
+
+.upload-page .section-header p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Main content layout */
+.upload-page-content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 2.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.upload-main {
+  position: relative;
+}
+
+/* Requirements section */
+.upload-requirements {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  height: fit-content;
+  position: relative;
+  overflow: hidden;
+}
+
+.requirements-header {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.requirements-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.8rem;
+}
+
+.requirements-header p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.requirements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.requirement-item {
+  display: flex;
+  gap: 1rem;
+  transition: all var(--transition-normal);
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+}
+
+.requirement-item:hover {
+  background-color: var(--primary-light);
+  transform: translateX(5px);
+}
+
+.requirement-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.requirement-item:nth-child(5) .requirement-icon {
+  background-color: rgba(243, 156, 18, 0.1);
+  color: var(--warning-color);
+}
+
+.requirement-content h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.requirement-content p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.requirements-note {
+  margin-top: 2rem;
+  padding: 1.2rem;
+  background-color: var(--primary-light);
+  border-radius: var(--radius-md);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.requirements-note svg {
+  color: var(--primary-color);
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+.requirements-note p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Toggle button for mobile */
+.toggle-requirements {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  background-color: var(--bg-white);
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.toggle-requirements:hover {
+  background-color: var(--primary-light);
+}
+
+.toggle-requirements svg {
+  transition: transform var(--transition-fast);
+}
+
+.toggle-requirements svg.rotate-down {
+  transform: rotate(90deg);
+}
+
+/* Decorative shapes */
+.upload-page-shape-1 {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary-light) 0%, rgba(255, 255, 255, 0) 70%);
+  top: -200px;
+  right: -200px;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+.upload-page-shape-2 {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary-light) 0%, rgba(255, 255, 255, 0) 70%);
+  bottom: -150px;
+  left: -150px;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .upload-page {
+    padding: 2rem 1.5rem;
   }
-  
-  .upload-page h1 {
-    font-size: 2.4rem;
-    color: var(--primary-color);
-    text-align: center;
-    margin-bottom: 10px;
+
+  .upload-page .section-header h1 {
+    font-size: 2.2rem;
   }
-  
-  .upload-page > p {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #666;
-    margin-bottom: 40px;
+
+  .upload-page-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
-  
-  /* Video Uploader Container */
-  .video-uploader-container {
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-  }
-  
-  .video-uploader-container h2 {
-    font-size: 1.6rem;
-    color: var(--dark-color);
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  /* Upload Area */
-  .upload-area {
-    min-height: 200px;
+
+  .toggle-requirements {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
   }
-  
-  .upload-icon {
-    font-size: 3rem;
-    margin-bottom: 15px;
-    color: #aaa;
-  }
-  
-  .upload-prompt p {
-    margin: 5px 0;
-  }
-  
-  .upload-hint {
-    font-size: 0.85rem;
-    color: #888;
-  }
-  
-  /* Video Preview */
-  .video-preview {
-    width: 100%;
-  }
-  
-  .video-preview video {
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .video-preview p {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: #666;
-  }
-  
-  /* Upload Button */
-  .upload-button {
+
+  .upload-requirements {
     display: block;
-    width: 100%;
-    max-width: 300px;
-    margin: 20px auto;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    transition: max-height var(--transition-normal), opacity var(--transition-normal), margin var(--transition-normal);
+    max-height: 2000px;
+    opacity: 1;
+    overflow: hidden;
   }
-  
-  /* Upload Progress */
-  .upload-progress {
-    text-align: center;
-    margin: 20px 0;
+
+  .upload-requirements.hide {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border: none;
   }
-  
-  .upload-progress p {
-    margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .upload-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .upload-page .section-header h1 {
+    font-size: 2rem;
+  }
+
+  .upload-page .section-header p {
+    font-size: 1.1rem;
+  }
+
+  .requirements-header h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .upload-page .section-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .upload-requirements {
+    padding: 1.5rem 1rem;
+  }
+
+  .requirements-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .requirement-item {
+    gap: 0.8rem;
+  }
+
+  .requirement-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .requirement-content h4 {
+    font-size: 1rem;
+  }
+
+  .requirement-content p {
     font-size: 0.9rem;
-    color: var(--primary-color);
   }
-  
-  /* Upload Instructions */
-  .upload-instructions {
-    margin-top: 40px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 20px;
-    border-left: 4px solid var(--primary-color);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-primary: #f5f5f5;
+    --text-secondary: #d1d1d1;
+    --text-light: #a0a0a0;
+    --bg-light: #1a1a2e;
+    --bg-white: #242444;
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
   }
-  
-  .upload-instructions h3 {
-    font-size: 1.2rem;
-    color: var(--dark-color);
-    margin-bottom: 12px;
+
+  .requirement-item:hover {
+    background-color: rgba(52, 152, 219, 0.15);
   }
-  
-  .upload-instructions ul {
-    padding-left: 20px;
+
+  .requirements-note {
+    background-color: rgba(52, 152, 219, 0.15);
   }
-  
-  .upload-instructions li {
-    margin-bottom: 8px;
-    color: #555;
+
+  .toggle-requirements {
+    background-color: transparent;
+    border-color: var(--primary-color);
   }
-  
-  /* Responsive adjustments */
-  @media (max-width: 600px) {
-    .upload-page h1 {
-      font-size: 2rem;
-    }
-    
-    .video-uploader-container {
-      padding: 20px 15px;
-    }
-    
-    .upload-area {
-      min-height: 150px;
-    }
+
+  .toggle-requirements:hover {
+    background-color: rgba(52, 152, 219, 0.15);
   }
+}

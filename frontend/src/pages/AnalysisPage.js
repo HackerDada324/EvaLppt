@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { analysisService } from '../services/analysisService';
 import '../styles/AnalysisPage.css';
+import { ArrowLeft, BarChart2, Mic, Video, Smile, AlertTriangle, CheckCircle } from 'lucide-react';
 
 // Import analysis result components
 import AudioAnalysisResults from '../components/analysis/AudioAnalysisResults';
@@ -52,16 +53,21 @@ const AnalysisPage = () => {
     if (loading && (!analysisData || analysisData.status !== 'completed')) {
       return (
         <div className="analysis-loading">
-          <h2>Processing Your Video</h2>
-          <div className="analysis-progress">
-            <div className="progress-bar">
-              <div 
-                className="progress-fill" 
-                style={{ width: `${analysisData?.progress || 0}%` }}
-              ></div>
+          <div className="loading-content">
+            <h2>Processing Your Video</h2>
+            <p className="loading-description">Our AI is analyzing your presentation. This may take a few minutes.</p>
+            <div className="analysis-progress">
+              <div className="progress-bar">
+                <div 
+                  className="progress-fill" 
+                  style={{ width: `${analysisData?.progress || 0}%` }}
+                ></div>
+              </div>
+              <p className="progress-message">{analysisData?.statusMessage || 'Analyzing your presentation...'}</p>
+              <p className="progress-percentage">{analysisData?.progress || 0}% Complete</p>
             </div>
-            <p>{analysisData?.statusMessage || 'Analyzing your presentation...'}</p>
-            <p className="progress-percentage">{analysisData?.progress || 0}% Complete</p>
+            <div className="loading-shape-1"></div>
+            <div className="loading-shape-2"></div>
           </div>
         </div>
       );
@@ -70,11 +76,15 @@ const AnalysisPage = () => {
     if (error || (analysisData && analysisData.status === 'failed')) {
       return (
         <div className="analysis-error">
-          <h2>Analysis Failed</h2>
-          <p>{error || analysisData?.error || 'An unknown error occurred during analysis.'}</p>
-          <button onClick={() => window.history.back()} className="back-button">
-            Go Back
-          </button>
+          <div className="error-content">
+            <AlertTriangle size={60} />
+            <h2>Analysis Failed</h2>
+            <p>{error || analysisData?.error || 'An unknown error occurred during analysis.'}</p>
+            <button onClick={() => window.history.back()} className="primary-button">
+              <ArrowLeft size={18} />
+              Go Back
+            </button>
+          </div>
         </div>
       );
     }
@@ -82,12 +92,16 @@ const AnalysisPage = () => {
     return (
       <>
         <div className="video-container">
-          <video 
-            src={analysisData.videoUrl} 
-            controls 
-            width="100%" 
-            height="auto"
-          />
+          <div className="video-wrapper">
+            <video 
+              src={analysisData.videoUrl} 
+              controls 
+              width="100%" 
+              height="auto"
+            />
+          </div>
+          <div className="video-shape-1"></div>
+          <div className="video-shape-2"></div>
         </div>
 
         <div className="analysis-tabs">
@@ -95,37 +109,43 @@ const AnalysisPage = () => {
             className={`tab-button ${activeTab === 'summary' ? 'active' : ''}`}
             onClick={() => setActiveTab('summary')}
           >
-            Summary
+            <BarChart2 size={18} />
+            <span>Summary</span>
           </button>
           <button 
             className={`tab-button ${activeTab === 'content' ? 'active' : ''}`}
             onClick={() => setActiveTab('content')}
           >
-            Content
+            <CheckCircle size={18} />
+            <span>Content</span>
           </button>
           <button 
             className={`tab-button ${activeTab === 'audio' ? 'active' : ''}`}
             onClick={() => setActiveTab('audio')}
           >
-            Speech
+            <Mic size={18} />
+            <span>Speech</span>
           </button>
           <button 
             className={`tab-button ${activeTab === 'disfluency' ? 'active' : ''}`}
             onClick={() => setActiveTab('disfluency')}
           >
-            Disfluency
+            <AlertTriangle size={18} />
+            <span>Disfluency</span>
           </button>
           <button 
             className={`tab-button ${activeTab === 'motion' ? 'active' : ''}`}
             onClick={() => setActiveTab('motion')}
           >
-            Motion
+            <Video size={18} />
+            <span>Motion</span>
           </button>
           <button 
             className={`tab-button ${activeTab === 'expression' ? 'active' : ''}`}
             onClick={() => setActiveTab('expression')}
           >
-            Expression
+            <Smile size={18} />
+            <span>Expression</span>
           </button>
         </div>
 
@@ -155,7 +175,10 @@ const AnalysisPage = () => {
 
   return (
     <div className="analysis-page">
-      <h1>Presentation Analysis</h1>
+      <div className="section-header">
+        <h1>Presentation Analysis</h1>
+        <p>Detailed insights and feedback to improve your presentation skills</p>
+      </div>
       <div className="analysis-container">
         {renderContent()}
       </div>
