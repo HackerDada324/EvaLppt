@@ -1,0 +1,25 @@
+{
+    "short_name": "Presentation Evaluator",
+    "name": "Presentation Evaluator - AI-powered analysis and feedback",
+    "icons": [
+      {
+        "src": "favicon.ico",
+        "sizes": "64x64 32x32 24x24 16x16",
+        "type": "image/x-icon"
+      },
+      {
+        "src": "assets/logo192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "assets/logo512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#4a6bff",
+    "background_color": "#f9f9f9"
+  }

@@ -1,0 +1,213 @@
+.video-player {
+    position: relative;
+    width: 100%;
+    background-color: #000;
+    overflow: hidden;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .video-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    color: white;
+    padding: 0.75rem;
+    z-index: 10;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+  }
+  
+  .video-player video {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+  }
+  
+  .video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    padding: 1rem;
+    z-index: 10;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .progress-container {
+    cursor: pointer;
+    height: 10px;
+    margin-bottom: 0.75rem;
+    position: relative;
+  }
+  
+  .progress-bar {
+    background-color: rgba(255, 255, 255, 0.3);
+    height: 4px;
+    border-radius: 2px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    transition: height 0.2s ease;
+  }
+  
+  .progress-container:hover .progress-bar {
+    height: 8px;
+  }
+  
+  .progress-fill {
+    background-color: var(--primary-color);
+    height: 100%;
+    transition: width 0.1s linear;
+  }
+  
+  .controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .control-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+  
+  .control-button:hover {
+    transform: scale(1.1);
+  }
+  
+  .time-display {
+    color: white;
+    font-size: var(--font-size-small);
+    margin: 0 1rem;
+  }
+  
+  .volume-control {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+  }
+  
+  .volume-icon {
+    color: white;
+    margin-right: 0.5rem;
+  }
+  
+  .volume-slider {
+    width: 60px;
+    -webkit-appearance: none;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    outline: none;
+  }
+  
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: white;
+    cursor: pointer;
+  }
+  
+  .fullscreen-button {
+    font-size: 1.2rem;
+  }
+  
+  .play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .play-icon {
+    font-size: 3rem;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .fade-in {
+    opacity: 1;
+  }
+  
+  .fade-out {
+    opacity: 0;
+  }
+  
+  .video-player:hover .play-overlay {
+    opacity: 0.7;
+  }
+  
+  .video-player.playing:hover .play-overlay {
+    opacity: 0;
+  }
+  
+  .hide-controls .video-controls,
+  .hide-controls .video-title {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  
+  .show-controls .video-controls,
+  .show-controls .video-title {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .volume-control {
+      display: none;
+    }
+    
+    .control-button {
+      width: 32px;
+      height: 32px;
+      font-size: 1.2rem;
+    }
+    
+    .time-display {
+      font-size: 0.75rem;
+    }
+    
+    .play-icon {
+      font-size: 2rem;
+      width: 60px;
+      height: 60px;
+    }
+    
+    .video-controls {
+      padding: 0.75rem;
+    }
+  }

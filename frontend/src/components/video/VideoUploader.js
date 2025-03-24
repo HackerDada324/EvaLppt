@@ -1,16 +1,37 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { analysisService } from '../../services/analysisService';
+import VideoPlayer from './VideoPlayer';
+import VideoProcessingStatus from './VideoProcessingStatus';
+import Loading from '../common/Loading';
+import '../../styles/VideoUploader.css';
 
 const VideoUploader = () => {
+  // State hooks
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [error, setError] = useState(null);
+  const [isHovering, setIsHovering] = useState(false);
+  
+  // Refs
   const fileInputRef = useRef(null);
+  
+  // Navigation
   const navigate = useNavigate();
-
+  
+  // Clean up object URLs on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
+  
+  // Handle file selection
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
@@ -27,6 +48,11 @@ const VideoUploader = () => {
       return;
     }
 
+    // Clean up previous preview if it exists
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+
     setFile(selectedFile);
     setError(null);
 
@@ -35,24 +61,48 @@ const VideoUploader = () => {
     setPreview(previewUrl);
   };
 
+  // Handle drag-and-drop functionality
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!isHovering) setIsHovering(true);
+  };
+  
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isHovering) setIsHovering(false);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    setIsHovering(false);
     
     const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile && droppedFile.type.startsWith('video/')) {
-      setFile(droppedFile);
-      setError(null);
-      const previewUrl = URL.createObjectURL(droppedFile);
-      setPreview(previewUrl);
-    } else {
+    if (!droppedFile) return;
+    
+    // Check if file is a video
+    if (!droppedFile.type.startsWith('video/')) {
       setError('Please drop a valid video file');
+      return;
     }
+    
+    // Check file size (limit to 100MB for example)
+    if (droppedFile.size > 100 * 1024 * 1024) {
+      setError('File size exceeds 100MB limit');
+      return;
+    }
+    
+    // Clean up previous preview if it exists
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+    
+    setFile(droppedFile);
+    setError(null);
+    const previewUrl = URL.createObjectURL(droppedFile);
+    setPreview(previewUrl);
   };
 
   const handleUpload = async () => {
@@ -65,33 +115,83 @@ const VideoUploader = () => {
       setUploading(true);
       setUploadProgress(0);
       
-      // Custom axios request to track progress
-      const formData = new FormData();
-      formData.append('video', file);
+      // Upload phase
+      const uploadResponse = await analysisService.uploadVideo(file, {
+        targetFps: 5, 
+        onProgress: (progress) => {
+          setUploadProgress(progress);
+        }
+      });
       
-      const response = await analysisService.uploadVideo(file);
+      // Processing phase (after upload completes)
+      setUploading(false);
+      setProcessing(true);
       
-      // Navigate to analysis page with the returned ID
-      navigate(`/analysis/${response.data.analysisId}`);
+      const analysisId = uploadResponse.data.analysisId;
+      
+      // Poll for processing status
+      const pollingInterval = setInterval(async () => {
+        try {
+          const statusResponse = await analysisService.getAnalysisStatus(analysisId);
+          if (statusResponse.data.status === 'completed') {
+            clearInterval(pollingInterval);
+            
+            // Get full analysis results
+            const analysisResults = await analysisService.getAnalysisResults(analysisId);
+            
+            // Navigate to results page with the data
+            navigate('/analysis', { 
+              state: { 
+                analysisResults: analysisResults.data,
+                videoName: file.name,
+                videoUrl: preview
+              } 
+            });
+          } else if (statusResponse.data.status === 'failed') {
+            clearInterval(pollingInterval);
+            setError('Analysis failed. Please try again with a different video.');
+            setProcessing(false);
+          }
+        } catch (err) {
+          clearInterval(pollingInterval);
+          console.error('Status check error:', err);
+          setError('Failed to check processing status. Please try again.');
+          setProcessing(false);
+        }
+      }, 3000); // Check every 3 seconds
+      
     } catch (err) {
       console.error('Upload error:', err);
-      setError('Failed to upload video. Please try again.');
-    } finally {
+      setError(err.response?.data?.error || 'Failed to upload video. Please try again.');
       setUploading(false);
+      setProcessing(false);
     }
   };
-
+  
   const triggerFileInput = () => {
-    fileInputRef.current.click();
+    if (!uploading && !processing) {
+      fileInputRef.current.click();
+    }
+  };
+  
+  const resetUpload = () => {
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+    setFile(null);
+    setPreview(null);
+    setError(null);
   };
 
   return (
     <div className="video-uploader-container">
       <h2>Upload Presentation Video</h2>
       
+      {/* Main upload area */}
       <div 
-        className={`upload-area ${file ? 'has-file' : ''}`}
+        className={`upload-area ${file ? 'has-file' : ''} ${isHovering ? 'dragging' : ''} ${(uploading || processing) ? 'disabled' : ''}`}
         onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={triggerFileInput}
       >
@@ -101,25 +201,43 @@ const VideoUploader = () => {
           onChange={handleFileChange}
           accept="video/*"
           style={{ display: 'none' }}
+          disabled={uploading || processing}
         />
         
         {preview ? (
           <div className="video-preview">
-            <video src={preview} controls width="100%" height="auto" />
-            <p>{file.name} ({(file.size / (1024 * 1024)).toFixed(2)} MB)</p>
+            <VideoPlayer 
+              src={preview} 
+              title={file.name}
+              width="100%"
+              height="auto"
+              controls={true}
+            />
+            <div className="video-info">
+              <p className="video-name">{file.name}</p>
+              <p className="video-size">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+              {!uploading && !processing && (
+                <button className="reset-button" onClick={(e) => { e.stopPropagation(); resetUpload(); }}>
+                  Choose Different Video
+                </button>
+              )}
+            </div>
           </div>
         ) : (
           <div className="upload-prompt">
             <div className="upload-icon">📤</div>
             <p>Drag and drop your video here or click to browse</p>
             <p className="upload-hint">Supported formats: MP4, MOV, AVI, etc.</p>
+            <p className="upload-hint">Maximum size: 100MB</p>
           </div>
         )}
       </div>
       
+      {/* Error message display */}
       {error && <div className="error-message">{error}</div>}
       
-      {uploading ? (
+      {/* Upload/Processing status display */}
+      {uploading && (
         <div className="upload-progress">
           <div className="progress-bar">
             <div 
@@ -129,16 +247,27 @@ const VideoUploader = () => {
           </div>
           <p>Uploading... {uploadProgress}%</p>
         </div>
-      ) : (
+      )}
+      
+      {processing && (
+        <VideoProcessingStatus 
+          message="Analyzing your presentation..."
+          subMessage="This may take a few minutes. Please don't close this page."
+        />
+      )}
+      
+      {/* Action button */}
+      {!uploading && !processing && (
         <button 
           className="upload-button" 
           onClick={handleUpload}
-          disabled={!file || uploading}
+          disabled={!file || uploading || processing}
         >
           Upload and Analyze
         </button>
       )}
       
+      {/* Instructions */}
       <div className="upload-instructions">
         <h3>Guidelines for Best Results:</h3>
         <ul>
@@ -146,6 +275,7 @@ const VideoUploader = () => {
           <li>Position the camera to capture your full upper body</li>
           <li>Record in a quiet environment with minimal background noise</li>
           <li>Speak clearly and at a normal pace</li>
+          <li>Recommended video length: 3-10 minutes</li>
         </ul>
       </div>
     </div>

@@ -1,0 +1,194 @@
+.video-uploader-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .video-uploader-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--gray-800);
+  }
+  
+  .upload-area {
+    border: 2px dashed var(--gray-400);
+    border-radius: var(--border-radius-md);
+    padding: 2rem;
+    text-align: center;
+    background-color: var(--gray-100);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  
+  .upload-area:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(74, 107, 255, 0.05);
+  }
+  
+  .upload-area.dragging {
+    border-color: var(--primary-color);
+    background-color: rgba(74, 107, 255, 0.1);
+    transform: scale(1.01);
+  }
+  
+  .upload-area.has-file {
+    border-style: solid;
+    border-color: var(--success-color);
+    background-color: rgba(40, 167, 69, 0.05);
+  }
+  
+  .upload-area.disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+  
+  .upload-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+  
+  .upload-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--gray-500);
+  }
+  
+  .upload-prompt p {
+    margin-bottom: 0.5rem;
+    color: var(--gray-700);
+  }
+  
+  .upload-hint {
+    font-size: var(--font-size-small);
+    color: var(--gray-600);
+  }
+  
+  .video-preview {
+    width: 100%;
+  }
+  
+  .video-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+  
+  .video-name {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  .video-size {
+    color: var(--gray-600);
+    font-size: var(--font-size-small);
+    margin-bottom: 1rem;
+  }
+  
+  .reset-button {
+    background-color: transparent;
+    border: 1px solid var(--gray-400);
+    color: var(--gray-700);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-size: var(--font-size-small);
+    transition: all var(--transition-fast);
+  }
+  
+  .reset-button:hover {
+    background-color: var(--gray-200);
+    border-color: var(--gray-500);
+  }
+  
+  .error-message {
+    color: var(--error-color);
+    background-color: rgba(220, 53, 69, 0.1);
+    padding: 0.75rem;
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .upload-progress {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .progress-bar {
+    height: 10px;
+    background-color: var(--gray-200);
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+  }
+  
+  .upload-button {
+    display: block;
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 1rem;
+    font-size: var(--font-size-normal);
+    font-weight: 600;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+    margin-bottom: 2rem;
+  }
+  
+  .upload-button:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  .upload-button:disabled {
+    background-color: var(--gray-400);
+    cursor: not-allowed;
+  }
+  
+  .upload-instructions {
+    background-color: var(--gray-100);
+    border-radius: var(--border-radius-md);
+    padding: 1.5rem;
+    border-left: 4px solid var(--primary-color);
+  }
+  
+  .upload-instructions h3 {
+    color: var(--gray-800);
+    margin-bottom: 1rem;
+    font-size: var(--font-size-medium);
+  }
+  
+  .upload-instructions ul {
+    padding-left: 1.5rem;
+  }
+  
+  .upload-instructions li {
+    margin-bottom: 0.5rem;
+    color: var(--gray-700);
+  }
+  
+  @media (max-width: 768px) {
+    .video-uploader-container {
+      padding: 1rem;
+    }
+    
+    .upload-area {
+      padding: 1.5rem 1rem;
+    }
+    
+    .upload-button {
+      padding: 0.8rem;
+    }
+  }
