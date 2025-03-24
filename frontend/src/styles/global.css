@@ -1,0 +1,82 @@
+:root {
+    --primary-color: #4a6bff;
+    --secondary-color: #45caff;
+    --dark-color: #333;
+    --light-color: #f9f9f9;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--dark-color);
+    background-color: var(--light-color);
+  }
+  
+  .upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 20px 0;
+  }
+  
+  .upload-area:hover {
+    border-color: var(--primary-color);
+    background-color: #f0f4ff;
+  }
+  
+  .upload-area.has-file {
+    border-style: solid;
+    border-color: var(--success-color);
+  }
+  
+  .upload-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .upload-button:hover {
+    background-color: #3a5ae8;
+  }
+  
+  .upload-button:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+  }
+  
+  .error-message {
+    color: var(--error-color);
+    margin: 10px 0;
+  }
+  
+  .progress-bar {
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease;
+  }

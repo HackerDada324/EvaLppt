@@ -1,0 +1,138 @@
+/* UploadPage.css - Styling for the video upload page */
+
+.upload-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .upload-page h1 {
+    font-size: 2.4rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .upload-page > p {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 40px;
+  }
+  
+  /* Video Uploader Container */
+  .video-uploader-container {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+  }
+  
+  .video-uploader-container h2 {
+    font-size: 1.6rem;
+    color: var(--dark-color);
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Upload Area */
+  .upload-area {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .upload-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #aaa;
+  }
+  
+  .upload-prompt p {
+    margin: 5px 0;
+  }
+  
+  .upload-hint {
+    font-size: 0.85rem;
+    color: #888;
+  }
+  
+  /* Video Preview */
+  .video-preview {
+    width: 100%;
+  }
+  
+  .video-preview video {
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .video-preview p {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  /* Upload Button */
+  .upload-button {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin: 20px auto;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Upload Progress */
+  .upload-progress {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .upload-progress p {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+  }
+  
+  /* Upload Instructions */
+  .upload-instructions {
+    margin-top: 40px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    border-left: 4px solid var(--primary-color);
+  }
+  
+  .upload-instructions h3 {
+    font-size: 1.2rem;
+    color: var(--dark-color);
+    margin-bottom: 12px;
+  }
+  
+  .upload-instructions ul {
+    padding-left: 20px;
+  }
+  
+  .upload-instructions li {
+    margin-bottom: 8px;
+    color: #555;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .upload-page h1 {
+      font-size: 2rem;
+    }
+    
+    .video-uploader-container {
+      padding: 20px 15px;
+    }
+    
+    .upload-area {
+      min-height: 150px;
+    }
+  }
