@@ -24,6 +24,13 @@
   overflow-x: hidden;
 }
 
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
 /* Section styling */
 .home-page section {
   padding: 5rem 2rem;
@@ -64,19 +71,44 @@
   line-height: 1.6;
 }
 
-/* Hero section */
+/* Hero section - UPDATED TO CENTER CONTENT */
 .hero-section {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 3rem;
+  text-align: center;
   padding-top: 6rem;
-  padding-bottom: 6rem;
+  padding-bottom: 3rem; /* Reduced from 6rem */
+  position: relative;
+}
+
+.hero-section .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative; /* Added for positioning of decorative elements */
+}
+
+/* Key fix: Remove the excess space in hero image */
+.hero-image {
+  position: absolute; /* Changed from relative to absolute */
+  pointer-events: none; /* Prevent interaction with shapes */
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 
 .hero-content {
-  flex: 1;
-  max-width: 600px;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center all content including the button */
 }
 
 .hero-content h1 {
@@ -92,7 +124,8 @@
   content: "";
   position: absolute;
   top: -10px;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 40px;
   height: 4px;
   background-color: var(--primary-color);
@@ -104,35 +137,25 @@
   color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 2.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hero-cta {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center; /* Added for vertical centering */
+  width: auto; /* Changed from 100% to auto */
+  margin-bottom: 1rem;
 }
 
-.hero-image {
-  flex: 1;
-  position: relative;
+/* Fixed the button alignment */
+.hero-cta a {
+  min-width: 220px; /* Added min-width to ensure proper sizing */
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.image-container {
-  position: relative;
-  z-index: 2;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-}
-
-.image-container img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  border-radius: var(--radius-lg);
 }
 
 .hero-shape-1 {
@@ -142,7 +165,7 @@
   border-radius: 50%;
   background: radial-gradient(circle, var(--primary-light) 0%, rgba(255, 255, 255, 0) 70%);
   top: -100px;
-  right: -100px;
+  right: 5%;
   z-index: 1;
 }
 
@@ -152,9 +175,10 @@
   height: 200px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--primary-light) 0%, rgba(255, 255, 255, 0) 70%);
-  bottom: -50px;
-  left: -50px;
-  z-index: 1;
+  bottom: 10%;
+  left: 5%;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* Buttons */
@@ -173,6 +197,7 @@
   transition: all var(--transition-fast);
   border: none;
   cursor: pointer;
+  justify-content: center; /* Ensure text and icon are centered */
 }
 
 .primary-button:hover {
@@ -382,6 +407,16 @@
   display: flex;
   align-items: flex-start;
   gap: 1.2rem;
+  background-color: var(--bg-white);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+}
+
+.benefit-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
 }
 
 .benefit-icon {
@@ -401,117 +436,62 @@
   line-height: 1.6;
 }
 
-/* Testimonial section */
-.testimonial-section {
-  padding-top: 6rem;
-  padding-bottom: 6rem;
-}
-
-.testimonial-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2.5rem;
-  margin-bottom: 3rem;
-}
-
-.testimonial-card {
-  background-color: var(--bg-white);
-  padding: 2.5rem;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  max-width: 400px;
-  position: relative;
-  transition: all var(--transition-normal);
-}
-
-.testimonial-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-lg);
-}
-
-.quote-mark {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 4rem;
-  line-height: 1;
-  color: var(--primary-color);
-  opacity: 0.1;
-  font-family: Georgia, serif;
-}
-
-.testimonial-text {
-  color: var(--text-secondary);
-  font-style: italic;
-  margin-bottom: 2rem;
-  position: relative;
-  z-index: 1;
-  line-height: 1.7;
-}
-
-.testimonial-author {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.author-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.author-info h4 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.2rem;
-}
-
-.author-info p {
-  color: var(--text-light);
-  font-size: 0.9rem;
-}
-
-/* Final CTA section */
+/* Final CTA section - UPDATED STYLING */
 .final-cta {
-  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  background-color: var(--bg-light);
   border-radius: var(--radius-lg);
-  color: white;
+  color: var(--text-primary);
   text-align: center;
   padding: 5rem 2rem;
   margin-bottom: 5rem;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add a subtle gradient overlay instead of full gradient background */
+.final-cta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+  border-radius: 5px 5px 0 0;
 }
 
 .cta-content {
   max-width: 700px;
   margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
 .final-cta h2 {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
+  color: var(--text-primary);
 }
 
 .final-cta p {
   font-size: 1.2rem;
   margin-bottom: 2.5rem;
-  opacity: 0.9;
+  color: var(--text-secondary);
 }
 
 .final-cta .primary-button {
-  background-color: white;
-  color: var(--primary-color);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  min-width: 220px;
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
 }
 
 .final-cta .primary-button:hover {
-  background-color: white;
+  background-color: var(--primary-dark);
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
 }
 
 /* Responsive styles */
@@ -521,27 +501,12 @@
   }
 
   .hero-section {
-    flex-direction: column;
     padding-top: 4rem;
-    padding-bottom: 4rem;
-    text-align: center;
-  }
-
-  .hero-content {
-    max-width: 100%;
+    padding-bottom: 3rem;
   }
 
   .hero-content h1 {
     font-size: 2.8rem;
-  }
-
-  .hero-content h1::before {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .hero-cta {
-    justify-content: center;
   }
 
   .steps-container {
@@ -626,10 +591,12 @@
   .hero-cta {
     flex-direction: column;
     width: 100%;
+    align-items: center;
   }
 
   .hero-cta a {
     width: 100%;
+    max-width: 280px; /* Limit width on small screens */
     justify-content: center;
   }
 
@@ -637,8 +604,9 @@
     padding: 1.8rem 1.2rem;
   }
 
-  .testimonial-card {
-    padding: 2rem 1.5rem;
+  .final-cta .primary-button {
+    width: 100%;
+    max-width: 280px;
   }
 }
 
@@ -668,12 +636,7 @@
   }
 
   .step-item p,
-  .benefit-content p,
-  .testimonial-text {
+  .benefit-content p {
     color: var(--text-secondary);
-  }
-
-  .quote-mark {
-    opacity: 0.15;
   }
 }
