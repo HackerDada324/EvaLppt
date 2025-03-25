@@ -1,4 +1,4 @@
-/* UploadPage.css - Redesigned to match HomePage.css and AnalysisPage.css style */
+/* UploadPage.css - Enhanced with integrated horizontal requirements layout */
 :root {
   --primary-color: #3498db;
   --primary-light: rgba(52, 152, 219, 0.1);
@@ -21,20 +21,27 @@
   --warning-color: #f39c12;
 }
 
+/* Ensure no scrollbars on body and html */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 .upload-page {
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 4rem 2rem;
   position: relative;
-  overflow-x: hidden;
+  overflow: visible;
+  min-height: 85vh;
 }
 
-/* Section header styling to match HomePage and AnalysisPage */
+/* Section header styling to match HomePage */
 .upload-page .section-header {
   text-align: center;
   max-width: 800px;
-  margin: 0 auto 3rem;
+  margin: 0 auto 4rem;
 }
 
 .upload-page .section-header h1 {
@@ -64,33 +71,79 @@
   line-height: 1.6;
 }
 
-/* Main content layout */
+/* Main content layout - changed to integrate requirements */
 .upload-page-content {
-  display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
   position: relative;
   z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 .upload-main {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 100%;
 }
 
-/* Requirements section */
-.upload-requirements {
-  background-color: var(--bg-white);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
+/* Center the upload button */
+.upload-button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.upload-analyze-btn {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-md);
+}
+
+.upload-analyze-btn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-lg);
-  height: fit-content;
-  position: relative;
-  overflow: hidden;
 }
 
+.upload-analyze-btn:active {
+  transform: translateY(-1px);
+}
+
+.upload-analyze-btn svg {
+  font-size: 1.2rem;
+}
+
+/* Center any button that might be in the video uploader */
+.video-uploader button,
+.video-uploader .btn,
+.video-uploader .upload-btn,
+.video-uploader .submit-btn,
+.video-uploader input[type="submit"] {
+  display: block !important;
+  margin: 2rem auto !important;
+  min-width: 220px;
+}
+
+/* Requirements styling - integrated directly within main content */
 .requirements-header {
   margin-bottom: 2rem;
   position: relative;
+  text-align: center;
 }
 
 .requirements-header h2 {
@@ -98,35 +151,65 @@
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 0.8rem;
+  position: relative;
+  display: inline-block;
+}
+
+.requirements-header h2::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 3px;
 }
 
 .requirements-header p {
   color: var(--text-secondary);
   font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
+/* Changed to grid for horizontal layout */
 .requirements-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
+  margin-bottom: 2rem;
+  overflow: visible;
 }
 
 .requirement-item {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 1rem;
   transition: all var(--transition-normal);
-  padding: 0.5rem;
+  padding: 1.5rem 1rem;
   border-radius: var(--radius-md);
+  background-color: var(--bg-white);
+  box-shadow: var(--shadow-md);
+  overflow: visible;
 }
 
 .requirement-item:hover {
   background-color: var(--primary-light);
-  transform: translateX(5px);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.requirement-item.warning:hover {
+  background-color: rgba(243, 156, 18, 0.1);
 }
 
 .requirement-icon {
-  width: 40px;
-  height: 40px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background-color: var(--primary-light);
   display: flex;
@@ -134,18 +217,31 @@
   justify-content: center;
   color: var(--primary-color);
   flex-shrink: 0;
+  transition: all var(--transition-normal);
+  margin-bottom: 0.5rem;
 }
 
-.requirement-item:nth-child(5) .requirement-icon {
+.requirement-item:hover .requirement-icon {
+  transform: scale(1.1);
+}
+
+.requirement-item.warning .requirement-icon {
   background-color: rgba(243, 156, 18, 0.1);
   color: var(--warning-color);
+}
+
+.requirement-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  word-break: break-word;
 }
 
 .requirement-content h4 {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
 }
 
 .requirement-content p {
@@ -155,13 +251,21 @@
 }
 
 .requirements-note {
-  margin-top: 2rem;
-  padding: 1.2rem;
+  margin-top: 1rem;
+  padding: 1.5rem;
   background-color: var(--primary-light);
   border-radius: var(--radius-md);
   display: flex;
   gap: 1rem;
   align-items: flex-start;
+  transition: background-color var(--transition-normal);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.requirements-note:hover {
+  background-color: rgba(52, 152, 219, 0.15);
 }
 
 .requirements-note svg {
@@ -177,7 +281,7 @@
   margin: 0;
 }
 
-/* Toggle button for mobile */
+/* Toggle button for mobile - improved styling */
 .toggle-requirements {
   display: none;
   align-items: center;
@@ -185,18 +289,24 @@
   gap: 0.5rem;
   width: 100%;
   padding: 1rem;
-  margin-top: 1.5rem;
+  margin: 2rem auto 0;
   background-color: var(--bg-white);
-  border: 1px solid var(--primary-color);
+  border: 2px solid var(--primary-color);
   color: var(--primary-color);
   font-weight: 600;
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition-fast);
+  max-width: 300px;
 }
 
 .toggle-requirements:hover {
   background-color: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+.toggle-requirements:active {
+  transform: translateY(0);
 }
 
 .toggle-requirements svg {
@@ -207,7 +317,7 @@
   transform: rotate(90deg);
 }
 
-/* Decorative shapes */
+/* Decorative shapes - improved positioning */
 .upload-page-shape-1 {
   position: absolute;
   width: 500px;
@@ -216,8 +326,9 @@
   background: radial-gradient(circle, var(--primary-light) 0%, rgba(255, 255, 255, 0) 70%);
   top: -200px;
   right: -200px;
-  z-index: 1;
+  z-index: 0;
   opacity: 0.6;
+  pointer-events: none;
 }
 
 .upload-page-shape-2 {
@@ -228,51 +339,50 @@
   background: radial-gradient(circle, var(--primary-light) 0%, rgba(255, 255, 255, 0) 70%);
   bottom: -150px;
   left: -150px;
-  z-index: 1;
+  z-index: 0;
   opacity: 0.6;
+  pointer-events: none;
 }
 
 /* Responsive adjustments */
 @media (max-width: 992px) {
   .upload-page {
-    padding: 2rem 1.5rem;
+    padding: 3rem 1.5rem;
   }
 
   .upload-page .section-header h1 {
     font-size: 2.2rem;
   }
 
-  .upload-page-content {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+  .requirements-list {
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .toggle-requirements {
     display: flex;
   }
-
-  .upload-requirements {
-    display: block;
-    transition: max-height var(--transition-normal), opacity var(--transition-normal), margin var(--transition-normal);
+  
+  /* Hiding requirements section */
+  .requirements-section {
+    transition: all var(--transition-normal);
     max-height: 2000px;
     opacity: 1;
-    overflow: hidden;
+    overflow: visible;
+    margin-bottom: 2rem;
   }
 
-  .upload-requirements.hide {
+  .requirements-section.hide {
     max-height: 0;
     opacity: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    border: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
   }
 }
 
 @media (max-width: 768px) {
   .upload-page {
-    padding: 1.5rem 1rem;
+    padding: 2.5rem 1.5rem;
   }
 
   .upload-page .section-header h1 {
@@ -286,28 +396,45 @@
   .requirements-header h2 {
     font-size: 1.5rem;
   }
+  
+  .requirements-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .upload-analyze-btn {
+    padding: 0.9rem 1.8rem;
+    font-size: 1rem;
+  }
 }
 
 @media (max-width: 576px) {
+  .upload-page {
+    padding: 2rem 1rem;
+  }
+  
+  .upload-page .section-header {
+    margin-bottom: 2.5rem;
+  }
+  
   .upload-page .section-header h1 {
     font-size: 1.8rem;
-  }
-
-  .upload-requirements {
-    padding: 1.5rem 1rem;
   }
 
   .requirements-header h2 {
     font-size: 1.3rem;
   }
+  
+  .requirements-list {
+    grid-template-columns: 1fr;
+  }
 
   .requirement-item {
-    gap: 0.8rem;
+    padding: 1.2rem 1rem;
   }
 
   .requirement-icon {
-    width: 32px;
-    height: 32px;
+    width: 50px;
+    height: 50px;
   }
 
   .requirement-content h4 {
@@ -317,6 +444,32 @@
   .requirement-content p {
     font-size: 0.9rem;
   }
+  
+  .requirements-note {
+    padding: 1.2rem;
+  }
+  
+  .upload-analyze-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.95rem;
+    min-width: 200px;
+  }
+}
+
+/* Explicitly hide scrollbars for all browsers */
+/* For Webkit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* Make sure the body doesn't have scrollbars */
+body {
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
 /* Dark mode support */
@@ -332,8 +485,16 @@
     --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
   }
 
+  .requirement-item {
+    background-color: var(--bg-white);
+  }
+
   .requirement-item:hover {
     background-color: rgba(52, 152, 219, 0.15);
+  }
+  
+  .requirement-item.warning:hover {
+    background-color: rgba(243, 156, 18, 0.15);
   }
 
   .requirements-note {
@@ -348,4 +509,81 @@
   .toggle-requirements:hover {
     background-color: rgba(52, 152, 219, 0.15);
   }
+  
+  .upload-analyze-btn {
+    background-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+  }
+  
+  .upload-analyze-btn:hover {
+    background-color: var(--primary-dark);
+    box-shadow: 0 6px 16px rgba(52, 152, 219, 0.5);
+  }
+}
+
+/* Center the instructions section in VideoUploader */
+.video-uploader-container .upload-instructions {
+  text-align: center;
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+/* Center the instructions header */
+.video-uploader-container .instructions-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.video-uploader-container .instructions-header svg {
+  margin-bottom: 0.5rem;
+}
+
+/* Make list items centered */
+.video-uploader-container .upload-instructions ul {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+}
+
+/* Add some spacing between list items */
+.video-uploader-container .upload-instructions li {
+  margin-bottom: 0.8rem;
+}
+
+/* Make sure the primary button is centered */
+.video-uploader-container .primary-button {
+  display: block !important;
+  margin: 2rem auto !important;
+  text-align: center !important;
+}
+
+/* Ensure section header is centered */
+.video-uploader-container .section-header {
+  text-align: center;
+  width: 100%;
+}
+
+/* Improve button styling */
+.video-uploader-container .primary-button {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: 220px;
+  box-shadow: var(--shadow-md);
+}
+
+.video-uploader-container .primary-button:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
 }

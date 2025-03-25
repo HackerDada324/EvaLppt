@@ -266,14 +266,17 @@ const VideoUploader = () => {
       
       {/* Action button */}
       {!uploading && !processing && (
+      <div className="upload-button-container">
         <button 
-          className="primary-button" 
+          className="primary-button upload-analyze-btn" 
           onClick={handleUpload}
           disabled={!file || uploading || processing}
         >
-          Upload and Analyze
+          <Upload size={20} />
+          <span>Upload and Analyze</span>
         </button>
-      )}
+      </div>
+    )}
       
       {/* Instructions */}
       <div className="upload-instructions">
