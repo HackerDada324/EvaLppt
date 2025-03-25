@@ -16,7 +16,7 @@
 
 .header-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 1rem 2.5rem;
   max-width: 1280px;
@@ -24,30 +24,10 @@
   transition: padding 0.3s ease;
 }
 
-.logo-container {
+.main-nav {
   display: flex;
-  align-items: center;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: #2c3e50;
-  font-weight: 700;
-  font-size: 1.4rem;
-  transition: color 0.2s ease;
-  letter-spacing: -0.5px;
-}
-
-.logo:hover {
-  color: #3498db;
-}
-
-.logo img {
-  height: 36px;
-  width: auto;
-  margin-right: 10px;
+  justify-content: center;
+  flex: 2;
 }
 
 .main-nav ul {
@@ -116,37 +96,9 @@
 .header-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 1.5rem;
-}
-
-.primary-button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 0.7rem 1.4rem;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.25);
-}
-
-.primary-button:hover {
-  background-color: #2980b9;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3);
-}
-
-.primary-button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 5px rgba(52, 152, 219, 0.2);
-}
-
-.primary-button a {
-  color: white;
-  text-decoration: none;
-  display: block;
+  flex: 1;
 }
 
 .mobile-menu-toggle {
@@ -201,6 +153,12 @@
 .mobile-menu-toggle.open .hamburger-icon::after {
   transform: rotate(-45deg);
   bottom: 0;
+}
+
+/* Header spacer styles - replaces the app branding */
+.header-spacer {
+  flex: 1;
+  visibility: hidden; /* Make it invisible but keep the space */
 }
 
 /* Responsive styles */
@@ -277,29 +235,24 @@
   .mobile-menu-toggle {
     display: block;
   }
-
-  .primary-button {
-    font-size: 0.9rem;
-    padding: 0.6rem 1.2rem;
+  
+  .header-spacer {
+    flex: 0;
+    min-width: 20px;
+  }
+  
+  .header-container {
+    justify-content: space-between;
+  }
+  
+  .header-actions {
+    justify-content: flex-end;
   }
 }
 
 @media (max-width: 576px) {
   .header-container {
     padding: 0.8rem 1.2rem;
-  }
-
-  .logo span {
-    font-size: 1.2rem;
-  }
-
-  .logo img {
-    height: 30px;
-  }
-
-  .primary-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
   }
 }
 
@@ -313,14 +266,6 @@
   .app-header.scrolled {
     background-color: rgba(26, 26, 46, 0.98);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  }
-
-  .logo {
-    color: #f5f5f5;
-  }
-
-  .logo:hover {
-    color: #3498db;
   }
 
   .main-nav a {

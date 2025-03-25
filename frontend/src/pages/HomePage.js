@@ -152,20 +152,9 @@ const HomePage = () => {
                 <p>Monitor your improvement over time with detailed analytics and progress tracking.</p>
               </div>
             </div>
-
-            <div className="benefit-item">
-              <div className="benefit-icon">
-                <Clock size={24} />
-              </div>
-              <div className="benefit-content">
-                <h4>Save Time</h4>
-                <p>Get instant feedback rather than waiting for peer reviews or professional coaching.</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
-
       <section className="final-cta">
         <div className="container">
           <div className="cta-content">

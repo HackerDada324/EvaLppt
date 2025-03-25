@@ -36,11 +36,8 @@ const Header = () => {
   return (
     <header className={`app-header ${scrolled ? "scrolled" : ""}`}>
       <div className="header-container">
-        <div className="logo-container">
-          <Link to="/" className="logo">
-            <span>DataAnalyzer</span>
-          </Link>
-        </div>
+        {/* Left spacer to maintain layout balance */}
+        <div className="header-spacer"></div>
 
         <nav className={`main-nav ${menuOpen ? "open" : ""}`} onClick={(e) => e.stopPropagation()}>
           <ul>
@@ -48,15 +45,12 @@ const Header = () => {
               <Link to="/">Home</Link>
             </li>
             <li className={location.pathname === "/upload" ? "active" : ""}>
-              <Link to="/upload">New Analysis</Link>
+              <Link to="/upload">Upload</Link>
             </li>
           </ul>
         </nav>
 
         <div className="header-actions">
-          <button className="primary-button">
-            <Link to="/upload">Start Analysis</Link>
-          </button>
           <button
             className={`mobile-menu-toggle ${menuOpen ? "open" : ""}`}
             onClick={(e) => {
