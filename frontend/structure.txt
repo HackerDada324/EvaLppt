@@ -45,7 +45,7 @@ presentation-evaluator/
 │   │   │   │   └── Loading.js    # Loading indicator
 │   │   │   │
 │   │   │   ├── video/            # Video-related components
-│   │   │   │   ├── VideoUploader.js         # Video upload component
+│   │   │   │   ├── VideoUploader.js         
 │   │   │   │   ├── VideoPlayer.js           # Video playback
 │   │   │   │   └── VideoProcessingStatus.js  # Status indicator
 │   │   │   │
@@ -60,13 +60,10 @@ presentation-evaluator/
 │   │   ├── pages/                # Application pages
 │   │   │   ├── HomePage.js       # Landing page
 │   │   │   ├── UploadPage.js     # Video upload page
-│   │   │   ├── AnalysisPage.js   # Results page
-│   │   │   ├── HistoryPage.js    # Previous analyses
-│   │   │   └── ProfilePage.js    # User profile
+│   │   │   └── AnalysisPage.js   # Results page
 │   │   │
 │   │   ├── services/             # API communication
 │   │   │   ├── api.js            # API setup (axios/fetch)
-│   │   │   ├── authService.js    # Authentication
 │   │   │   └── analysisService.js # Communication with backend
 │   │   │
 │   │   ├── utils/                # Utility functions
@@ -74,12 +71,10 @@ presentation-evaluator/
 │   │   │   └── validators.js     # Input validation
 │   │   │
 │   │   ├── contexts/             # React contexts
-│   │   │   ├── AuthContext.js    # Authentication context
 │   │   │   └── AnalysisContext.js # Analysis state management
 │   │   │
 │   │   ├── hooks/                # Custom React hooks
 │   │   │   ├── useAnalysis.js    # Analysis-related hooks
-│   │   │   └── useAuth.js        # Authentication hooks
 │   │   │
 │   │   ├── styles/               # CSS/SCSS files
 │   │   │   ├── global.css        # Global styles
@@ -94,17 +89,14 @@ presentation-evaluator/
 │
 ├── api/                          # API gateway
 │   ├── routes/                   # API routes
-│   │   ├── auth.js               # Authentication routes
 │   │   ├── uploads.js            # Video upload routes
 │   │   └── analysis.js           # Analysis routes
 │   │
 │   ├── controllers/              # Request handlers
-│   │   ├── authController.js     # Authentication controller
 │   │   ├── uploadController.js   # Upload controller
 │   │   └── analysisController.js # Analysis controller
 │   │
 │   ├── middleware/               # Middleware functions
-│   │   ├── auth.js               # Authentication middleware
 │   │   └── upload.js             # File upload middleware
 │   │
 │   ├── index.js                  # API entry point

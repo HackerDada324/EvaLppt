@@ -1,8 +1,8 @@
 .sidebar {
     width: 250px;
     height: 100vh;
-    background-color: #f8f9fa;
-    border-right: 1px solid #eaeaea;
+    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
+    border-right: 1px solid var(--gray-300);
     position: fixed;
     top: 0;
     left: 0;
@@ -10,6 +10,7 @@
     transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
+    backdrop-filter: blur(10px);
   }
   
   .sidebar.closed {
@@ -21,13 +22,13 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid var(--gray-300);
   }
   
   .sidebar-header h2 {
     margin: 0;
     font-size: 1.2rem;
-    color: #333;
+    color: var(--text-primary);
   }
   
   .close-sidebar {
@@ -35,7 +36,12 @@
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: #777;
+    color: var(--text-secondary);
+    transition: color var(--transition-fast);
+  }
+
+  .close-sidebar:hover {
+    color: var(--primary-color);
   }
   
   .sidebar-nav {
@@ -59,20 +65,24 @@
     align-items: center;
     padding: 0.75rem 1.5rem;
     text-decoration: none;
-    color: #555;
+    color: var(--text-secondary);
     border-left: 3px solid transparent;
     transition: all 0.2s;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    margin: 0 0.5rem;
   }
   
   .nav-list a:hover {
-    background-color: rgba(0, 102, 204, 0.05);
-    color: #0066cc;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
   }
   
   .nav-list a.active {
-    background-color: rgba(0, 102, 204, 0.1);
-    color: #0066cc;
-    border-left-color: #0066cc;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(245, 158, 11, 0.1) 100%);
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
+    font-weight: 600;
   }
   
   .nav-icon {
@@ -85,7 +95,7 @@
   .sub-menu {
     margin-top: 1.5rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #eaeaea;
+    border-top: 1px solid var(--gray-300);
   }
   
   .sub-menu h3 {
@@ -94,7 +104,7 @@
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #777;
+    color: var(--text-muted);
   }
   
   .sub-nav-list a {
@@ -104,19 +114,20 @@
   
   .sidebar-footer {
     padding: 1rem 1.5rem;
-    border-top: 1px solid #eaeaea;
+    border-top: 1px solid var(--gray-300);
   }
   
   .github-link {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: #555;
+    color: var(--text-secondary);
     padding: 0.5rem 0;
+    transition: color var(--transition-fast);
   }
   
   .github-link:hover {
-    color: #0066cc;
+    color: var(--primary-color);
   }
   
   @media (max-width: 992px) {

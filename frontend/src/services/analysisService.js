@@ -25,21 +25,31 @@ export const analysisService = {
         }
       };
       
-      // Try to make API call, but catch error if backend isn't ready
       const response = await api.post('/api/analyze-body-motion', formData, config);
       return response;
     } catch (error) {
-      console.log('API not ready yet:', error);
-      // Return mock data for development
-      return {
-        data: {
-          status: 'success',
-          message: 'Mock analysis complete',
-          results: {
-            // Mock analysis results here
-          }
-        }
-      };
+      console.error('API Error:', error);
+      throw new Error(`Upload failed: ${error.response?.data?.error || error.message}`);
+    }
+  },
+  
+  getAnalysisStatus: async (analysisId) => {
+    try {
+      const response = await api.get(`/api/analysis/${analysisId}/status`);
+      return response;
+    } catch (error) {
+      console.error('API Error:', error);
+      throw new Error(`Failed to get analysis status: ${error.response?.data?.error || error.message}`);
+    }
+  },
+  
+  getAnalysisResults: async (analysisId) => {
+    try {
+      const response = await api.get(`/api/analysis/${analysisId}/results`);
+      return response;
+    } catch (error) {
+      console.error('API Error:', error);
+      throw new Error(`Failed to get analysis results: ${error.response?.data?.error || error.message}`);
     }
   },
   
@@ -48,13 +58,19 @@ export const analysisService = {
       const response = await api.get('/api/summary');
       return response;
     } catch (error) {
-      console.log('API not ready yet:', error);
-      // Return mock data
-      return {
-        data: {
-          // Mock summary data
-        }
-      };
+      console.error('API Error:', error);
+      throw new Error(`Failed to get summary: ${error.response?.data?.error || error.message}`);
+    }
+  },
+
+  testConnection: async () => {
+    try {
+      const response = await api.get('/api/test');
+      console.log('API Connection Test:', response.data);
+      return response;
+    } catch (error) {
+      console.error('API Connection Failed:', error);
+      throw new Error(`Connection test failed: ${error.response?.data?.error || error.message}`);
     }
   }
 };

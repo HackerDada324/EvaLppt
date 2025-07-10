@@ -1,169 +1,174 @@
+import React from "react"
 import { Link } from "react-router-dom"
 import "../styles/HomePage.css"
-import { ArrowRight, CheckCircle, Mic, Video, BarChart2, Smile, Award, Clock } from "lucide-react"
+import { analysisService } from '../services/analysisService'
+import { 
+  ArrowRight, 
+  Mic, 
+  Video, 
+  BarChart2, 
+  Smile, 
+  Award, 
+  Clock, 
+  Play,
+  Users,
+  TrendingUp,
+  Shield,
+  Upload,
+  Star
+} from "lucide-react"
 
 const HomePage = () => {
+  const features = [
+    {
+      icon: <BarChart2 size={28} />,
+      title: "Content Analysis",
+      description: "Analyze the quality, structure, and coherence of your presentation content with advanced AI algorithms.",
+      color: "blue"
+    },
+    {
+      icon: <Video size={28} />,
+      title: "Body Language",
+      description: "Get insights on your posture, gestures, and movement to improve your physical presence.",
+      color: "green"
+    },
+    {
+      icon: <Mic size={28} />,
+      title: "Speech Analysis",
+      description: "Evaluate your speaking pace, clarity, volume, and detect filler words automatically.",
+      color: "purple"
+    },
+    {
+      icon: <Smile size={28} />,
+      title: "Facial Expression",
+      description: "Understand your emotional engagement and facial expressions throughout your presentation.",
+      color: "orange"
+    }
+  ]
+
+  const stats = [
+    { number: "10,000+", label: "Presentations Analyzed", icon: <BarChart2 size={20} /> },
+    { number: "95%", label: "Improvement Rate", icon: <TrendingUp size={20} /> },
+    { number: "500+", label: "Happy Users", icon: <Users size={20} /> },
+    { number: "4.9/5", label: "Average Rating", icon: <Star size={20} /> }
+  ]
+
+  const benefits = [
+    {
+      icon: <Clock size={24} />,
+      title: "Save Time",
+      description: "Get instant feedback instead of waiting for human reviewers"
+    },
+    {
+      icon: <Award size={24} />,
+      title: "Improve Skills",
+      description: "Detailed analytics help you identify and fix specific issues"
+    },
+    {
+      icon: <Shield size={24} />,
+      title: "Private & Secure",
+      description: "Your videos are processed securely and never stored permanently"
+    }
+  ]
+
   return (
-    <div className="home-page">
-      {/* Background decorations */}
-      <div className="bg-decoration bg-decoration-1"></div>
-      <div className="bg-decoration bg-decoration-2"></div>
-
+    <div className="homepage">
+      {/* Hero Section */}
       <section className="hero-section">
-        <div className="container">
-          <div className="hero-content">
-            <h1>AI Presentation Evaluator</h1>
-            <p>Get instant, AI-powered feedback to improve your presentation skills and deliver with confidence</p>
-            <div className="hero-cta">
-              <Link to="/upload" className="primary-button">
-                Upload Your Presentation
-                <ArrowRight size={18} />
-              </Link>
-            </div>
-          </div>
-          <div className="hero-image">
-            <div className="hero-shape-1"></div>
-            <div className="hero-shape-2"></div>
+        <div className="hero-content">
+          <h1 className="hero-title">
+            Perfect Your Presentation Skills with AI Feedback
+          </h1>
+          <p className="hero-subtitle">
+            Get instant, comprehensive analysis of your presentation skills including speech patterns, 
+            body language, facial expressions, and content quality. Improve with confidence.
+          </p>
+          <div className="hero-cta">
+            <Link to="/upload" className="btn btn-primary btn-lg">
+              <Upload size={20} />
+              Start Free Analysis
+              <ArrowRight size={18} />
+            </Link>
+            <button className="btn btn-secondary btn-lg">
+              <Play size={20} />
+              Watch Demo
+            </button>
           </div>
         </div>
       </section>
 
+      {/* Stats Section */}
+      <section className="stats-section">
+        <div className="stats-grid">
+          {stats.map((stat, index) => (
+            <div key={index} className="stat-card">
+              <div className="stat-number">{stat.number}</div>
+              <div className="stat-label">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features Section */}
       <section className="features-section">
-        <div className="container">
-          <div className="section-header">
-            <h2>Comprehensive Analysis</h2>
-            <p>Our AI evaluates multiple aspects of your presentation to provide holistic feedback</p>
-          </div>
-
-          <div className="features-grid">
-            <div className="feature-card">
+        <div className="features-grid">
+          {features.map((feature, index) => (
+            <div key={index} className="feature-card">
               <div className="feature-icon">
-                <BarChart2 size={32} />
+                {feature.icon}
               </div>
-              <h3>Content Analysis</h3>
-              <p>
-                Analyze the quality, structure, and coherence of your presentation content with advanced AI algorithms
-              </p>
+              <h3 className="feature-title">{feature.title}</h3>
+              <p className="feature-description">{feature.description}</p>
             </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Mic size={32} />
-              </div>
-              <h3>Speech Analysis</h3>
-              <p>Evaluate your speech clarity, pace, tone, and vocal delivery for maximum audience engagement</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Video size={32} />
-              </div>
-              <h3>Body Language</h3>
-              <p>Review your body motion, gestures, posture, and stage presence to enhance your physical delivery</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Smile size={32} />
-              </div>
-              <h3>Facial Expressions</h3>
-              <p>
-                Analyze your facial expressions, engagement, and emotional connection to build rapport with your audience
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      <section className="how-it-works">
-        <div className="container">
-          <div className="section-header">
-            <h2>How It Works</h2>
-            <p>Three simple steps to improve your presentation skills</p>
-          </div>
-
-          <div className="steps-container">
-            <div className="step-item">
-              <div className="step-number">1</div>
-              <h3>Upload</h3>
-              <p>Upload your presentation video or provide a link to your recording in seconds</p>
+      {/* Benefits Section */}
+      <section className="stats-section">
+        <div className="stats-grid">
+          {benefits.map((benefit, index) => (
+            <div key={index} className="stat-card">
+              <div className="feature-icon">
+                {benefit.icon}
+              </div>
+              <h3 className="feature-title">{benefit.title}</h3>
+              <p className="feature-description">{benefit.description}</p>
             </div>
-
-            <div className="step-connector"></div>
-
-            <div className="step-item">
-              <div className="step-number">2</div>
-              <h3>Analyze</h3>
-              <p>Our AI analyzes multiple aspects of your presentation using advanced algorithms</p>
-            </div>
-
-            <div className="step-connector"></div>
-
-            <div className="step-item">
-              <div className="step-number">3</div>
-              <h3>Improve</h3>
-              <p>Receive detailed feedback and actionable suggestions to enhance your skills</p>
-            </div>
-          </div>
-
-          <div className="cta-container">
-            <Link to="/upload" className="primary-button">
-              Start Your Analysis
-              <ArrowRight size={18} />
-            </Link>
-          </div>
+          ))}
         </div>
       </section>
 
-      <section className="benefits-section">
-        <div className="container">
-          <div className="section-header">
-            <h2>Why Use Our AI Presentation Evaluator?</h2>
-            <p>Powerful benefits to help you become a better presenter</p>
-          </div>
-
-          <div className="benefits-grid">
-            <div className="benefit-item">
-              <div className="benefit-icon">
-                <CheckCircle size={24} />
-              </div>
-              <div className="benefit-content">
-                <h4>Objective Feedback</h4>
-                <p>Receive unbiased, data-driven insights about your presentation style and content.</p>
-              </div>
-            </div>
-
-            <div className="benefit-item">
-              <div className="benefit-icon">
-                <CheckCircle size={24} />
-              </div>
-              <div className="benefit-content">
-                <h4>Actionable Improvements</h4>
-                <p>Get specific suggestions to enhance your delivery and engage your audience better.</p>
-              </div>
-            </div>
-
-            <div className="benefit-item">
-              <div className="benefit-icon">
-                <Award size={24} />
-              </div>
-              <div className="benefit-content">
-                <h4>Track Progress</h4>
-                <p>Monitor your improvement over time with detailed analytics and progress tracking.</p>
-              </div>
-            </div>
-          </div>
+      {/* CTA Section */}
+      <section className="cta-section">
+        <div className="cta-content">
+          <h2 className="cta-title">Ready to Improve Your Presentations?</h2>
+          <p className="cta-subtitle">Upload your first video and get detailed AI feedback in minutes</p>
+          <Link to="/upload" className="cta-button">
+            Get Started Free
+            <ArrowRight size={18} />
+          </Link>
         </div>
       </section>
-      <section className="final-cta">
+
+      {/* API Status Section - temporary for debugging */}
+      <section className="stats-section">
         <div className="container">
-          <div className="cta-content">
-            <h2>Ready to Improve Your Presentation Skills?</h2>
-            <p>Transform your presenting abilities with AI-powered feedback and actionable insights</p>
-            <Link to="/upload" className="primary-button">
-              Get Started Now
-              <ArrowRight size={18} />
-            </Link>
+          <div className="text-center mb-8">
+            <h3 className="text-xl font-semibold mb-4">API Status</h3>
+            <button 
+              className="btn btn-secondary"
+              onClick={async () => {
+                try {
+                  const response = await analysisService.testConnection();
+                  alert('API Connection Successful!\n' + JSON.stringify(response.data, null, 2));
+                } catch (error) {
+                  alert('API Connection Failed:\n' + error.message);
+                }
+              }}
+            >
+              Test API Connection
+            </button>
           </div>
         </div>
       </section>

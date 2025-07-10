@@ -23,22 +23,10 @@ const AnalysisPage = () => {
     const fetchAnalysisData = async () => {
       try {
         setLoading(true);
-        // Poll for results every 3 seconds until complete
-        const intervalId = setInterval(async () => {
-          const response = await analysisService.getAnalysisResults(id);
-          
-          if (response.data.status === 'completed' || response.data.status === 'failed') {
-            clearInterval(intervalId);
-            setAnalysisData(response.data);
-            setLoading(false);
-          } else {
-            // Update progress information
-            setAnalysisData(response.data);
-          }
-        }, 3000);
-        
-        // Clear interval on component unmount
-        return () => clearInterval(intervalId);
+        // Get analysis results
+        const response = await analysisService.getAnalysisResults(id);
+        setAnalysisData(response.data);
+        setLoading(false);
       } catch (err) {
         console.error('Error fetching analysis:', err);
         setError('Failed to load analysis results. Please try again.');
@@ -50,7 +38,7 @@ const AnalysisPage = () => {
   }, [id]);
 
   const renderContent = () => {
-    if (loading && (!analysisData || analysisData.status !== 'completed')) {
+    if (loading) {
       return (
         <div className="analysis-loading">
           <div className="loading-content">
@@ -60,11 +48,11 @@ const AnalysisPage = () => {
               <div className="progress-bar">
                 <div 
                   className="progress-fill" 
-                  style={{ width: `${analysisData?.progress || 0}%` }}
+                  style={{ width: '50%' }}
                 ></div>
               </div>
-              <p className="progress-message">{analysisData?.statusMessage || 'Analyzing your presentation...'}</p>
-              <p className="progress-percentage">{analysisData?.progress || 0}% Complete</p>
+              <p className="progress-message">Loading results...</p>
+              <p className="progress-percentage">Please wait</p>
             </div>
             <div className="loading-shape-1"></div>
             <div className="loading-shape-2"></div>
@@ -73,13 +61,13 @@ const AnalysisPage = () => {
       );
     }
 
-    if (error || (analysisData && analysisData.status === 'failed')) {
+    if (error) {
       return (
         <div className="analysis-error">
           <div className="error-content">
             <AlertTriangle size={60} />
             <h2>Analysis Failed</h2>
-            <p>{error || analysisData?.error || 'An unknown error occurred during analysis.'}</p>
+            <p>{error || 'An unknown error occurred during analysis.'}</p>
             <button onClick={() => window.history.back()} className="primary-button">
               <ArrowLeft size={18} />
               Go Back
@@ -89,9 +77,17 @@ const AnalysisPage = () => {
       );
     }
 
+    // Combine motion analysis data for the MotionAnalysisResults component
+    const motionData = {
+      body_motion: analysisData.body_motion,
+      head_motion: analysisData.head_motion,
+      hand_motion: analysisData.hand_motion
+    };
+
     return (
       <>
-        <div className="video-container">
+        {/* Video player would go here if we had the video URL */}
+        {/* <div className="video-container">
           <div className="video-wrapper">
             <video 
               src={analysisData.videoUrl} 
@@ -102,7 +98,7 @@ const AnalysisPage = () => {
           </div>
           <div className="video-shape-1"></div>
           <div className="video-shape-2"></div>
-        </div>
+        </div> */}
 
         <div className="analysis-tabs">
           <button 
@@ -154,19 +150,19 @@ const AnalysisPage = () => {
             <SummaryDashboard data={analysisData} />
           )}
           {activeTab === 'content' && (
-            <ContentAnalysisResults data={analysisData.contentAnalysis} />
+            <ContentAnalysisResults data={analysisData.content} />
           )}
           {activeTab === 'audio' && (
-            <AudioAnalysisResults data={analysisData.audioAnalysis} />
+            <AudioAnalysisResults data={analysisData.audio} />
           )}
           {activeTab === 'disfluency' && (
-            <DisfluencyAnalysisResults data={analysisData.disfluencyAnalysis} />
+            <DisfluencyAnalysisResults data={analysisData.disfluency} />
           )}
           {activeTab === 'motion' && (
-            <MotionAnalysisResults data={analysisData.motionAnalysis} />
+            <MotionAnalysisResults data={motionData} />
           )}
           {activeTab === 'expression' && (
-            <ExpressionAnalysisResults data={analysisData.expressionAnalysis} />
+            <ExpressionAnalysisResults data={analysisData.expression} />
           )}
         </div>
       </>
